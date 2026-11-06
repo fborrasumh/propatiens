@@ -636,8 +636,7 @@ function setLang(l){
 document.getElementById("langs").innerHTML = LANGS.map(l => `<button data-l="${l}" onclick="setLang('${l}')">${l.toUpperCase()}</button>`).join("");
 try {
   const saved = localStorage.getItem("propatiens-lang");
-  const nav = (navigator.language || "es").slice(0,2);
-  lang = LANGS.includes(saved) ? saved : (LANGS.includes(nav) ? nav : "es");
+  lang = LANGS.includes(saved) ? saved : "es";
 } catch(e) {}
 render();
 </script>
