@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herramientas de IA para asociaciones de pacientes · ProPatiens · UMH</title>
+<meta name="description" content="Portal del curso «IA para asociaciones de pacientes»: cuatro apps de IA (JuntIA, DifundIA, SubvencIA, EncuestIA), materiales por sesión, guía de la clave de API y normas de uso. Instituto ProPatiens y Cátedra del Paciente de la Universidad Miguel Hernández de Elche.">
+<link rel="icon" href="https://propatiens.com/wp-content/uploads/2024/02/cropped-favicon-instituto-propoatiens-white-270x270.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f7f5; --surface: #fff; --border: #e4e3df; --border-strong: #cccbc6;
+  --text: #1a1916; --muted: #7a7872; --accent: #1a4fd8;
+  --int: #1a4fd8; --ext: #c2186b; --sub: #126649; --enc: #6429a8;
+}
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; }
+a { color: var(--accent); }
+
+/* HEADER */
+header { background: #1a1916; color: #fff; padding: 56px 24px 48px; text-align: center; position: relative; }
+.lang-toggle { position: absolute; top: 16px; right: 16px; display: inline-flex; border: 1px solid #3a3934; border-radius: 99px; overflow: hidden; }
+.lang-toggle button { background: transparent; color: #888; border: 0; font: 600 12px/1 'Inter', sans-serif; letter-spacing: .06em; padding: 7px 11px; cursor: pointer; }
+.lang-toggle button.active { background: #fff; color: #1a1916; }
+.logos { display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: wrap; margin-bottom: 28px; }
+.logos img { height: 52px; width: auto; display: block; }
+.logos .sep { width: 1px; height: 40px; background: #3a3934; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #777; margin-bottom: 14px; }
+h1 { font-family: 'Sora', sans-serif; font-size: clamp(2rem, 4.6vw, 3.1rem); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; margin: 0 auto 14px; max-width: 820px; }
+h1 span { color: #6b8fff; }
+.sub { font-size: 1rem; color: #aaa; max-width: 600px; margin: 0 auto 30px; }
+.stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.stat-n { font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; }
+.stat-l { font-size: .75rem; color: #777; text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+
+/* NAV */
+nav { position: sticky; top: 0; z-index: 5; background: rgba(247,247,245,.94); backdrop-filter: blur(6px); border-bottom: .5px solid var(--border); }
+nav .in { max-width: 1060px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 6px; flex-wrap: wrap; }
+nav a { font-size: 13px; color: var(--muted); text-decoration: none; padding: 5px 12px; border-radius: 99px; border: .5px solid transparent; }
+nav a:hover { color: var(--text); border-color: var(--border-strong); background: var(--surface); }
+
+/* MAIN */
+main { max-width: 1060px; margin: 0 auto; padding: 40px 24px 80px; }
+section { margin-bottom: 56px; scroll-margin-top: 64px; }
+h2 { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: 6px; }
+.lead { color: var(--muted); margin-bottom: 22px; max-width: 760px; }
+
+/* APP CARDS */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: .5px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px; border-top: 4px solid var(--c); }
+.card-h { display: flex; align-items: center; gap: 12px; }
+.icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; background: var(--c); flex-shrink: 0; }
+.card h3 { font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 800; }
+.card .ses { font-size: 12px; color: var(--muted); }
+.card p { font-size: 14px; color: #444; }
+.card .chk { font-size: 13px; color: #555; background: #faf9f7; border-radius: 8px; padding: 10px 12px; }
+.card .chk b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 3px; }
+.card .foot { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding-top: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; font: 600 13px 'Inter', sans-serif; padding: 7px 14px; border-radius: 99px; text-decoration: none; background: var(--c); color: #fff; }
+.btn.off { background: #e9e8e4; color: var(--muted); pointer-events: none; }
+.doi { font-size: 12px; color: var(--muted); }
+.doi a { color: var(--muted); }
+.shared { margin-top: 16px; font-size: 14px; color: #555; background: var(--surface); border: .5px solid var(--border); border-radius: 12px; padding: 14px 18px; }
+
+/* SESSIONS */
+.sessions { background: var(--surface); border: .5px solid var(--border); border-radius: 12px; overflow: hidden; }
+.srow { display: grid; grid-template-columns: 56px 1fr 1fr 150px; gap: 16px; padding: 16px 18px; border-bottom: .5px solid var(--border); align-items: start; font-size: 14px; }
+.srow:last-child { border-bottom: 0; }
+.srow.head { background: #faf9f7; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 10px 18px; }
+.snum { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--c, var(--text)); }
+.stit { font-weight: 600; }
+.sapp { font-size: 12px; color: var(--muted); }
+.mat { font-size: 12px; color: var(--muted); display: inline-flex; gap: 5px; align-items: center; }
+
+/* STEPS / RULES */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.box { background: var(--surface); border: .5px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+.box h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
+ol, ul { padding-left: 20px; font-size: 14px; color: #444; }
+li { margin-bottom: 7px; }
+.prov { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.prov a { font-size: 13px; text-decoration: none; border: .5px solid var(--border-strong); border-radius: 99px; padding: 5px 12px; color: var(--text); background: #faf9f7; }
+.prov a:hover { border-color: var(--accent); }
+
+/* FOOTER */
+footer { background: var(--surface); border-top: .5px solid var(--border); padding: 28px 24px; text-align: center; font-size: 13px; color: var(--muted); }
+footer p + p { margin-top: 6px; }
+footer a { text-decoration: none; }
+
+@media (max-width: 720px) {
+  .srow { grid-template-columns: 40px 1fr; }
+  .srow .hide-sm { display: none; }
+  .logos img { height: 40px; }
+  .logos .sep { display: none; }
+  .lang-toggle { top: 10px; right: 10px; }
+  .lang-toggle button { padding: 6px 8px; }
+  header { padding-top: 64px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-toggle" role="group" aria-label="Idioma / Language" id="langs"></div>
+  <div class="logos">
+    <a href="https://propatiens.com/" target="_blank" rel="noopener"><img src="https://propatiens.com/wp-content/uploads/2024/02/Logotipo-Instituto-ProPatiens-Blanco.png" alt="Instituto ProPatiens"></a>
+    <span class="sep" aria-hidden="true"></span>
+    <a href="https://propatiens.com/catedra-paciente/" target="_blank" rel="noopener"><img src="https://propatiens.com/wp-content/uploads/2025/08/Logo-Catedra-Paciente-White.png" alt="Cátedra del Paciente"></a>
+  </div>
+  <p class="eyebrow" data-i18n="eyebrow"></p>
+  <h1 data-i18n-html="h1"></h1>
+  <p class="sub" data-i18n="sub"></p>
+  <div class="stats">
+    <div><div class="stat-n">4</div><div class="stat-l" data-i18n="stApps"></div></div>
+    <div><div class="stat-n">5</div><div class="stat-l" data-i18n="stSes"></div></div>
+    <div><div class="stat-n">10 h</div><div class="stat-l" data-i18n="stHours"></div></div>
+    <div><div class="stat-n">6</div><div class="stat-l" data-i18n="stLangs"></div></div>
+  </div>
+</header>
+
+<nav><div class="in">
+  <a href="#apps" data-i18n="navApps"></a>
+  <a href="#curso" data-i18n="navCourse"></a>
+  <a href="#clave" data-i18n="navKey"></a>
+  <a href="#normas" data-i18n="navRules"></a>
+</div></nav>
+
+<main>
+  <section id="apps">
+    <h2 data-i18n="appsH"></h2>
+    <p class="lead" data-i18n="appsLead"></p>
+    <div class="grid" id="grid"></div>
+    <p class="shared" data-i18n="shared"></p>
+  </section>
+
+  <section id="curso">
+    <h2 data-i18n="courseH"></h2>
+    <p class="lead" data-i18n="courseLead"></p>
+    <div class="sessions" id="sessions"></div>
+  </section>
+
+  <section id="clave">
+    <h2 data-i18n="keyH"></h2>
+    <p class="lead" data-i18n="keyLead"></p>
+    <div class="cols">
+      <div class="box">
+        <h3><i class="ti ti-key"></i> <span data-i18n="keyStepsH"></span></h3>
+        <ol id="keySteps"></ol>
+        <div class="prov">
+          <a href="https://platform.openai.com/" target="_blank" rel="noopener">OpenAI</a>
+          <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google Gemini</a>
+          <a href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic Claude</a>
+        </div>
+      </div>
+      <div class="box">
+        <h3><i class="ti ti-scale"></i> <span data-i18n="keyChooseH"></span></h3>
+        <ul id="keyChoose"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="normas">
+    <h2 data-i18n="rulesH"></h2>
+    <p class="lead" data-i18n="rulesLead"></p>
+    <div class="cols">
+      <div class="box">
+        <h3><i class="ti ti-shield-lock"></i> <span data-i18n="privH"></span></h3>
+        <ul id="priv"></ul>
+      </div>
+      <div class="box">
+        <h3><i class="ti ti-checklist"></i> <span data-i18n="ethH"></span></h3>
+        <ul id="eth"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p data-i18n="footOrg"></p>
+  <p><span data-i18n="footDev"></span> Fernando Borrás Rocher · <a href="https://orcid.org/0000-0002-5519-4573" target="_blank" rel="noopener">ORCID 0000-0002-5519-4573</a> · <a href="https://github.com/fborrasumh/propatiens" target="_blank" rel="noopener">GitHub</a> · <span data-i18n="footLic"></span></p>
+</footer>
+
+<script>
+/* =====================================================
+   APPS DEL PORTAL
+   ready: true cuando la app esté publicada en GitHub Pages.
+   doi:   déjalo "" hasta acuñarlo en Zenodo; después pega
+          el DOI de concepto (p. ej. "10.5281/zenodo.1234567").
+   ===================================================== */
+const APPS = [
+  { id:"juntia",    name:"JuntIA",    ses:2, icon:"ti-users-group",   c:"--int", ready:false, doi:"" },
+  { id:"difundia",  name:"DifundIA",  ses:3, icon:"ti-speakerphone",  c:"--ext", ready:false, doi:"" },
+  { id:"subvencia", name:"SubvencIA", ses:4, icon:"ti-file-certificate", c:"--sub", ready:false, doi:"" },
+  { id:"encuestia", name:"EncuestIA", ses:5, icon:"ti-chart-bar",     c:"--enc", ready:false, doi:"" }
+];
+const SES_COLOR = { 1:"--text", 2:"--int", 3:"--ext", 4:"--sub", 5:"--enc" };
+const LANGS = ["es","ca","eu","gl","en","pt"];
+
+const T = {
+es:{
+  eyebrow:"Curso · Instituto ProPatiens · Cátedra del Paciente UMH",
+  h1:"Herramientas de IA para <span>asociaciones de pacientes</span>",
+  sub:"Cuatro apps web de un solo archivo, con tu propia clave de IA, para la comunicación interna, la comunicación externa, los proyectos de financiación y las encuestas de tu asociación.",
+  stApps:"apps", stSes:"sesiones", stHours:"online", stLangs:"idiomas",
+  navApps:"Apps", navCourse:"Curso", navKey:"Clave de IA", navRules:"Normas de uso",
+  appsH:"Las cuatro apps",
+  appsLead:"Cada app funciona en el navegador, sin instalación ni servidor, con OpenAI, Google Gemini o Anthropic Claude. La IA propone y el código comprueba.",
+  checks:"Qué comprueba el código", open:"Abrir app", soon:"En preparación", doiPend:"DOI pendiente", session:"Sesión",
+  shared:"Las cuatro apps comparten el perfil de la asociación (nombre, misión, públicos, tono y fuentes aprobadas) en un único archivo JSON, para no rellenarlo cuatro veces.",
+  apps:{
+    juntia:{ area:"Comunicación interna", what:"Convocatorias de junta y asamblea con orden del día; actas desde notas o audio con acuerdos, responsables y plazos; seguimiento de acuerdos; comunicados a socios y voluntariado; manual de acogida.", chk:"Cada acuerdo del acta lleva una cita literal de las notas; los acuerdos sin cita se marcan; las fechas y los plazos se calculan por código." },
+    difundia:{ area:"Comunicación externa", what:"Plan y calendario de comunicación; un mensaje adaptado a redes, nota de prensa, web, boletín y WhatsApp; versiones por público en lenguaje claro; briefing para Canva.", chk:"Legibilidad calculada por código (índice Fernández-Huerta); afirmaciones de salud con cita de una fuente aprobada; enlaces ajenos, cifras nuevas y expresiones estigmatizantes marcados." },
+    subvencia:{ area:"Proyectos de financiación", what:"Sube la convocatoria y el esquema del proyecto; extrae la rúbrica de evaluación; puntúa el proyecto y lo mejora en ciclos hasta acercarlo al máximo.", chk:"Cada criterio lleva su cita de las bases; la puntuación total la suma el código con los pesos de la convocatoria; un cambio solo se conserva si sube la puntuación; nada inventado (marcas [COMPLETAR])." },
+    encuestia:{ area:"Análisis de encuestas", what:"Sube un Excel o CSV; describe cada pregunta; compara antes y después; agrupa respuestas abiertas en temas; genera un informe Word con gráficos.", chk:"Todas las cifras las calcula el código; cada tema lleva respuestas literales; los grupos de menos de 5 personas se ocultan para evitar reidentificaciones." }
+  },
+  courseH:"El curso",
+  courseLead:"Cinco sesiones online de 2 horas. Cada asociación aplica las apps a su propia documentación anonimizada y sale con cuatro entregables reales.",
+  thN:"", thSes:"Sesión", thOut:"Entregable", thMat:"Materiales",
+  matSoon:"Próximamente",
+  sessions:[
+    { t:"Proveedores, modelos y tu clave de IA", a:"Presentación y guía de la clave", o:"Clave configurada con límite de gasto y perfil de la asociación en JSON." },
+    { t:"Comunicación interna", a:"JuntIA", o:"Acta revisada, convocatoria de la próxima reunión y un comunicado interno." },
+    { t:"Comunicación externa", a:"DifundIA", o:"Mini campaña multicanal revisada y calendario de comunicación de tres meses." },
+    { t:"Proyectos de financiación", a:"SubvencIA", o:"Rúbrica de la convocatoria, proyecto mejorado en Word e informe de ciclos con la puntuación de cada versión." },
+    { t:"Análisis de encuestas", a:"EncuestIA", o:"Informe Word de la encuesta y presentación de los cuatro entregables ante el grupo." }
+  ],
+  keyH:"Tu clave de IA",
+  keyLead:"Las apps usan la API del proveedor con tu propia clave. La clave se guarda solo en tu navegador y nunca pasa por un servidor del curso.",
+  keyStepsH:"Crear la clave con límite de gasto",
+  keySteps:[
+    "Crea una cuenta en la plataforma de desarrolladores del proveedor (en el curso, platform.openai.com).",
+    "Añade un método de pago y fija un límite de gasto mensual bajo antes de crear la clave.",
+    "Crea una clave de API, cópiala y guárdala en un lugar seguro: no se vuelve a mostrar.",
+    "Pégala en la app, carga la lista de modelos disponibles para tu clave y elige uno económico.",
+    "Si la clave se expone, revócala en la plataforma y crea otra."
+  ],
+  keyChooseH:"Cómo elegir modelo",
+  keyChoose:[
+    "Capacidad: los modelos grandes razonan mejor; los pequeños bastan para redactar y resumir.",
+    "Coste: se paga por tokens (precio por millón); redactar un acta cuesta céntimos.",
+    "Ventana de contexto: cuánto texto cabe en una petición; 1.000 tokens equivalen a unas 5 o 6 páginas.",
+    "Privacidad: el uso por API no se emplea para entrenar por defecto, pero los datos de salud son categoría especial del RGPD y no deben enviarse identificables."
+  ],
+  rulesH:"Normas de uso",
+  rulesLead:"Se aplican en todas las sesiones y en todas las apps.",
+  privH:"Protección de datos",
+  priv:[
+    "Solo documentación anonimizada: nunca historias clínicas, listados de socios ni datos de salud identificables.",
+    "Anonimiza antes de enviar. Las apps enmascaran correos, DNI, teléfonos e IBAN y avisan de posibles nombres.",
+    "En encuestas, no se muestran grupos de menos de 5 personas ni cruces que permitan identificar a alguien.",
+    "Cada participante usa su propia clave, guardada solo en su navegador."
+  ],
+  ethH:"Uso responsable",
+  eth:[
+    "Revisa todo lo que propone la IA antes de usarlo o publicarlo.",
+    "Declara el uso de IA cuando corresponda.",
+    "Ninguna app da dosis, pautas ni consejos clínicos individuales.",
+    "La IA no inventa datos de la asociación: lo que falta se marca [COMPLETAR].",
+    "La puntuación simulada de SubvencIA orienta, pero no garantiza la del evaluador real."
+  ],
+  footOrg:"Curso «IA para asociaciones de pacientes» · Instituto ProPatiens y Cátedra del Paciente de la Universidad Miguel Hernández de Elche",
+  footDev:"Desarrollo:", footLic:"Licencia MIT"
+},
+ca:{
+  eyebrow:"Curs · Institut ProPatiens · Càtedra del Pacient UMH",
+  h1:"Eines d'IA per a <span>associacions de pacients</span>",
+  sub:"Quatre aplicacions web d'un sol fitxer, amb la teua pròpia clau d'IA, per a la comunicació interna, la comunicació externa, els projectes de finançament i les enquestes de la teua associació.",
+  stApps:"apps", stSes:"sessions", stHours:"en línia", stLangs:"llengües",
+  navApps:"Apps", navCourse:"Curs", navKey:"Clau d'IA", navRules:"Normes d'ús",
+  appsH:"Les quatre apps",
+  appsLead:"Cada app funciona al navegador, sense instal·lació ni servidor, amb OpenAI, Google Gemini o Anthropic Claude. La IA proposa i el codi comprova.",
+  checks:"Què comprova el codi", open:"Obrir app", soon:"En preparació", doiPend:"DOI pendent", session:"Sessió",
+  shared:"Les quatre apps comparteixen el perfil de l'associació (nom, missió, públics, to i fonts aprovades) en un únic fitxer JSON, per no omplir-lo quatre vegades.",
+  apps:{
+    juntia:{ area:"Comunicació interna", what:"Convocatòries de junta i assemblea amb ordre del dia; actes a partir de notes o àudio amb acords, responsables i terminis; seguiment d'acords; comunicats a socis i voluntariat; manual d'acollida.", chk:"Cada acord de l'acta porta una cita literal de les notes; els acords sense cita es marquen; les dates i els terminis es calculen per codi." },
+    difundia:{ area:"Comunicació externa", what:"Pla i calendari de comunicació; un missatge adaptat a xarxes, nota de premsa, web, butlletí i WhatsApp; versions per públic en llenguatge clar; briefing per a Canva.", chk:"Llegibilitat calculada per codi (índex Fernández-Huerta); afirmacions de salut amb cita d'una font aprovada; enllaços aliens, xifres noves i expressions estigmatitzants marcats." },
+    subvencia:{ area:"Projectes de finançament", what:"Puja la convocatòria i l'esquema del projecte; n'extrau la rúbrica d'avaluació; puntua el projecte i el millora en cicles fins a acostar-lo al màxim.", chk:"Cada criteri porta la seua cita de les bases; la puntuació total la suma el codi amb els pesos de la convocatòria; un canvi només es conserva si puja la puntuació; res inventat (marques [COMPLETAR])." },
+    encuestia:{ area:"Anàlisi d'enquestes", what:"Puja un Excel o CSV; descriu cada pregunta; compara abans i després; agrupa respostes obertes en temes; genera un informe Word amb gràfics.", chk:"Totes les xifres les calcula el codi; cada tema porta respostes literals; els grups de menys de 5 persones s'oculten per evitar reidentificacions." }
+  },
+  courseH:"El curs",
+  courseLead:"Cinc sessions en línia de 2 hores. Cada associació aplica les apps a la seua pròpia documentació anonimitzada i n'ix amb quatre lliurables reals.",
+  thN:"", thSes:"Sessió", thOut:"Lliurable", thMat:"Materials",
+  matSoon:"Pròximament",
+  sessions:[
+    { t:"Proveïdors, models i la teua clau d'IA", a:"Presentació i guia de la clau", o:"Clau configurada amb límit de despesa i perfil de l'associació en JSON." },
+    { t:"Comunicació interna", a:"JuntIA", o:"Acta revisada, convocatòria de la pròxima reunió i un comunicat intern." },
+    { t:"Comunicació externa", a:"DifundIA", o:"Minicampanya multicanal revisada i calendari de comunicació de tres mesos." },
+    { t:"Projectes de finançament", a:"SubvencIA", o:"Rúbrica de la convocatòria, projecte millorat en Word i informe de cicles amb la puntuació de cada versió." },
+    { t:"Anàlisi d'enquestes", a:"EncuestIA", o:"Informe Word de l'enquesta i presentació dels quatre lliurables davant del grup." }
+  ],
+  keyH:"La teua clau d'IA",
+  keyLead:"Les apps usen l'API del proveïdor amb la teua pròpia clau. La clau es guarda només al teu navegador i mai no passa per un servidor del curs.",
+  keyStepsH:"Crear la clau amb límit de despesa",
+  keySteps:[
+    "Crea un compte a la plataforma de desenvolupadors del proveïdor (al curs, platform.openai.com).",
+    "Afig un mètode de pagament i fixa un límit de despesa mensual baix abans de crear la clau.",
+    "Crea una clau d'API, copia-la i guarda-la en un lloc segur: no es torna a mostrar.",
+    "Apega-la a l'app, carrega la llista de models disponibles per a la teua clau i tria'n un d'econòmic.",
+    "Si la clau queda exposada, revoca-la a la plataforma i crea'n una altra."
+  ],
+  keyChooseH:"Com triar model",
+  keyChoose:[
+    "Capacitat: els models grans raonen millor; els xicotets basten per a redactar i resumir.",
+    "Cost: es paga per tokens (preu per milió); redactar una acta costa cèntims.",
+    "Finestra de context: quant de text cap en una petició; 1.000 tokens equivalen a unes 5 o 6 pàgines.",
+    "Privacitat: l'ús per API no s'empra per a entrenar per defecte, però les dades de salut són categoria especial del RGPD i no s'han d'enviar identificables."
+  ],
+  rulesH:"Normes d'ús",
+  rulesLead:"S'apliquen en totes les sessions i en totes les apps.",
+  privH:"Protecció de dades",
+  priv:[
+    "Només documentació anonimitzada: mai històries clíniques, llistats de socis ni dades de salut identificables.",
+    "Anonimitza abans d'enviar. Les apps emmascaren correus, DNI, telèfons i IBAN i avisen de possibles noms.",
+    "En enquestes, no es mostren grups de menys de 5 persones ni encreuaments que permeten identificar algú.",
+    "Cada participant usa la seua pròpia clau, guardada només al seu navegador."
+  ],
+  ethH:"Ús responsable",
+  eth:[
+    "Revisa tot el que proposa la IA abans d'usar-ho o publicar-ho.",
+    "Declara l'ús d'IA quan corresponga.",
+    "Cap app no dona dosis, pautes ni consells clínics individuals.",
+    "La IA no inventa dades de l'associació: el que falta es marca [COMPLETAR].",
+    "La puntuació simulada de SubvencIA orienta, però no garanteix la de l'avaluador real."
+  ],
+  footOrg:"Curs «IA per a associacions de pacients» · Institut ProPatiens i Càtedra del Pacient de la Universitat Miguel Hernández d'Elx",
+  footDev:"Desenvolupament:", footLic:"Llicència MIT"
+},
+eu:{
+  eyebrow:"Ikastaroa · ProPatiens Institutua · UMHko Pazientearen Katedra",
+  h1:"AA tresnak <span>paziente elkarteentzat</span>",
+  sub:"Fitxategi bakarreko lau web aplikazio, zure AA gako propioarekin, zure elkartearen barne komunikaziorako, kanpo komunikaziorako, finantzaketa proiektuetarako eta inkestetarako.",
+  stApps:"aplikazio", stSes:"saio", stHours:"online", stLangs:"hizkuntza",
+  navApps:"Aplikazioak", navCourse:"Ikastaroa", navKey:"AA gakoa", navRules:"Erabilera arauak",
+  appsH:"Lau aplikazioak",
+  appsLead:"Aplikazio bakoitza nabigatzailean dabil, instalaziorik eta zerbitzaririk gabe, OpenAI, Google Gemini edo Anthropic Claude-rekin. AAk proposatzen du eta kodeak egiaztatzen du.",
+  checks:"Kodeak zer egiaztatzen duen", open:"Ireki aplikazioa", soon:"Prestatzen", doiPend:"DOI zain", session:"Saioa",
+  shared:"Lau aplikazioek elkartearen profila partekatzen dute (izena, misioa, publikoak, tonua eta onartutako iturriak) JSON fitxategi bakar batean, lau aldiz bete behar ez izateko.",
+  apps:{
+    juntia:{ area:"Barne komunikazioa", what:"Zuzendaritza batzarren eta batzar orokorren deialdiak gai zerrendarekin; aktak oharretatik edo audiotik, erabaki, arduradun eta epeekin; erabakien jarraipena; bazkide eta boluntarioentzako oharrak; harrera eskuliburua.", chk:"Aktako erabaki bakoitzak oharretako aipu literal bat darama; aipurik gabeko erabakiak markatu egiten dira; datak eta epeak kodez kalkulatzen dira." },
+    difundia:{ area:"Kanpo komunikazioa", what:"Komunikazio plana eta egutegia; mezu bat sare sozialetara, prentsa oharrera, webera, buletinera eta WhatsAppera egokitua; publiko bakoitzerako bertsioak hizkera argian; Canvarako briefinga.", chk:"Irakurgarritasuna kodez kalkulatua (Fernández-Huerta indizea); osasun baieztapenak onartutako iturri baten aipuarekin; kanpoko estekak, zifra berriak eta adierazpen estigmatizatzaileak markatuta." },
+    subvencia:{ area:"Finantzaketa proiektuak", what:"Igo deialdia eta proiektuaren eskema; ebaluazio errubrika ateratzen du; proiektua puntuatu eta zikloka hobetzen du gehienekora hurbildu arte.", chk:"Irizpide bakoitzak oinarrietako aipua darama; puntuazio osoa kodeak batzen du deialdiaren pisuekin; aldaketa bat puntuazioa igotzen bada bakarrik gordetzen da; ezer ez asmatua ([COMPLETAR] markak)." },
+    encuestia:{ area:"Inkesten analisia", what:"Igo Excel edo CSV bat; galdera bakoitza deskribatzen du; aurretik eta ondoren alderatzen ditu; erantzun irekiak gaitan multzokatzen ditu; Word txosten bat sortzen du grafikoekin.", chk:"Zifra guztiak kodeak kalkulatzen ditu; gai bakoitzak erantzun literalak ditu; 5 pertsona baino gutxiagoko taldeak ezkutatu egiten dira berridentifikazioak saihesteko." }
+  },
+  courseH:"Ikastaroa",
+  courseLead:"2 orduko bost saio online. Elkarte bakoitzak aplikazioak bere dokumentazio anonimizatuari aplikatzen dizkio eta benetako lau entregagarrirekin ateratzen da.",
+  thN:"", thSes:"Saioa", thOut:"Entregagarria", thMat:"Materialak",
+  matSoon:"Laster",
+  sessions:[
+    { t:"Hornitzaileak, ereduak eta zure AA gakoa", a:"Aurkezpena eta gakoaren gida", o:"Gastu mugarekin konfiguratutako gakoa eta elkartearen profila JSONen." },
+    { t:"Barne komunikazioa", a:"JuntIA", o:"Berrikusitako akta, hurrengo bileraren deialdia eta barne ohar bat." },
+    { t:"Kanpo komunikazioa", a:"DifundIA", o:"Kanal anitzeko kanpaina txiki berrikusia eta hiru hilabeteko komunikazio egutegia." },
+    { t:"Finantzaketa proiektuak", a:"SubvencIA", o:"Deialdiaren errubrika, Word-en hobetutako proiektua eta bertsio bakoitzaren puntuazioa duen zikloen txostena." },
+    { t:"Inkesten analisia", a:"EncuestIA", o:"Inkestaren Word txostena eta lau entregagarrien aurkezpena taldearen aurrean." }
+  ],
+  keyH:"Zure AA gakoa",
+  keyLead:"Aplikazioek hornitzailearen APIa erabiltzen dute zure gako propioarekin. Gakoa zure nabigatzailean bakarrik gordetzen da eta ez da inoiz ikastaroaren zerbitzari batetik pasatzen.",
+  keyStepsH:"Gakoa gastu mugarekin sortu",
+  keySteps:[
+    "Sortu kontu bat hornitzailearen garatzaileen plataforman (ikastaroan, platform.openai.com).",
+    "Gehitu ordainketa metodo bat eta ezarri hileko gastu muga baxu bat gakoa sortu aurretik.",
+    "Sortu API gako bat, kopiatu eta gorde leku seguru batean: ez da berriro erakusten.",
+    "Itsatsi aplikazioan, kargatu zure gakoarentzat eskuragarri dauden ereduen zerrenda eta aukeratu merke bat.",
+    "Gakoa agerian geratzen bada, ezeztatu plataforman eta sortu beste bat."
+  ],
+  keyChooseH:"Eredua nola aukeratu",
+  keyChoose:[
+    "Gaitasuna: eredu handiek hobeto arrazoitzen dute; txikiak nahikoak dira idazteko eta laburtzeko.",
+    "Kostua: tokenen arabera ordaintzen da (milioiko prezioa); akta bat idazteak zentimo batzuk balio ditu.",
+    "Testuinguru leihoa: eskaera batean zenbat testu sartzen den; 1.000 token 5 edo 6 orrialde inguru dira.",
+    "Pribatutasuna: APIaren erabilera ez da lehenespenez entrenatzeko erabiltzen, baina osasun datuak DBEOren kategoria berezia dira eta ez dira identifikagarri bidali behar."
+  ],
+  rulesH:"Erabilera arauak",
+  rulesLead:"Saio guztietan eta aplikazio guztietan aplikatzen dira.",
+  privH:"Datuen babesa",
+  priv:[
+    "Dokumentazio anonimizatua bakarrik: inoiz ez historia klinikoak, bazkide zerrendak edo osasun datu identifikagarriak.",
+    "Anonimizatu bidali aurretik. Aplikazioek posta elektronikoak, NANak, telefonoak eta IBANak ezkutatzen dituzte eta izen posibleez ohartarazten dute.",
+    "Inkestetan ez dira erakusten 5 pertsona baino gutxiagoko taldeak ezta norbait identifika dezaketen gurutzaketak ere.",
+    "Parte-hartzaile bakoitzak bere gakoa erabiltzen du, bere nabigatzailean bakarrik gordeta."
+  ],
+  ethH:"Erabilera arduratsua",
+  eth:[
+    "Berrikusi AAk proposatzen duen guztia erabili edo argitaratu aurretik.",
+    "Adierazi AA erabili dela dagokionean.",
+    "Aplikazio batek ere ez du dosirik, jarraibiderik edo banakako aholku klinikorik ematen.",
+    "AAk ez ditu elkartearen datuak asmatzen: falta dena [COMPLETAR] gisa markatzen da.",
+    "SubvencIAren puntuazio simulatuak orientatu egiten du, baina ez du benetako ebaluatzailearena bermatzen."
+  ],
+  footOrg:"«AA paziente elkarteentzat» ikastaroa · ProPatiens Institutua eta Elxeko Miguel Hernández Unibertsitateko Pazientearen Katedra",
+  footDev:"Garapena:", footLic:"MIT lizentzia"
+},
+gl:{
+  eyebrow:"Curso · Instituto ProPatiens · Cátedra do Paciente UMH",
+  h1:"Ferramentas de IA para <span>asociacións de pacientes</span>",
+  sub:"Catro aplicacións web dun só ficheiro, coa túa propia chave de IA, para a comunicación interna, a comunicación externa, os proxectos de financiamento e as enquisas da túa asociación.",
+  stApps:"apps", stSes:"sesións", stHours:"en liña", stLangs:"linguas",
+  navApps:"Apps", navCourse:"Curso", navKey:"Chave de IA", navRules:"Normas de uso",
+  appsH:"As catro apps",
+  appsLead:"Cada app funciona no navegador, sen instalación nin servidor, con OpenAI, Google Gemini ou Anthropic Claude. A IA propón e o código comproba.",
+  checks:"Que comproba o código", open:"Abrir app", soon:"En preparación", doiPend:"DOI pendente", session:"Sesión",
+  shared:"As catro apps comparten o perfil da asociación (nome, misión, públicos, ton e fontes aprobadas) nun único ficheiro JSON, para non enchelo catro veces.",
+  apps:{
+    juntia:{ area:"Comunicación interna", what:"Convocatorias de xunta e asemblea con orde do día; actas a partir de notas ou audio con acordos, responsables e prazos; seguimento de acordos; comunicados a socios e voluntariado; manual de acollida.", chk:"Cada acordo da acta leva unha cita literal das notas; os acordos sen cita márcanse; as datas e os prazos calcúlanse por código." },
+    difundia:{ area:"Comunicación externa", what:"Plan e calendario de comunicación; unha mensaxe adaptada a redes, nota de prensa, web, boletín e WhatsApp; versións por público en linguaxe clara; briefing para Canva.", chk:"Lexibilidade calculada por código (índice Fernández-Huerta); afirmacións de saúde con cita dunha fonte aprobada; ligazóns alleas, cifras novas e expresións estigmatizantes marcadas." },
+    subvencia:{ area:"Proxectos de financiamento", what:"Sube a convocatoria e o esquema do proxecto; extrae a rúbrica de avaliación; puntúa o proxecto e mellórao en ciclos ata achegalo ao máximo.", chk:"Cada criterio leva a súa cita das bases; a puntuación total súmaa o código cos pesos da convocatoria; un cambio só se conserva se sobe a puntuación; nada inventado (marcas [COMPLETAR])." },
+    encuestia:{ area:"Análise de enquisas", what:"Sube un Excel ou CSV; describe cada pregunta; compara antes e despois; agrupa respostas abertas en temas; xera un informe Word con gráficos.", chk:"Todas as cifras calcúlaas o código; cada tema leva respostas literais; os grupos de menos de 5 persoas ocúltanse para evitar reidentificacións." }
+  },
+  courseH:"O curso",
+  courseLead:"Cinco sesións en liña de 2 horas. Cada asociación aplica as apps á súa propia documentación anonimizada e sae con catro entregables reais.",
+  thN:"", thSes:"Sesión", thOut:"Entregable", thMat:"Materiais",
+  matSoon:"Proximamente",
+  sessions:[
+    { t:"Provedores, modelos e a túa chave de IA", a:"Presentación e guía da chave", o:"Chave configurada con límite de gasto e perfil da asociación en JSON." },
+    { t:"Comunicación interna", a:"JuntIA", o:"Acta revisada, convocatoria da próxima reunión e un comunicado interno." },
+    { t:"Comunicación externa", a:"DifundIA", o:"Minicampaña multicanle revisada e calendario de comunicación de tres meses." },
+    { t:"Proxectos de financiamento", a:"SubvencIA", o:"Rúbrica da convocatoria, proxecto mellorado en Word e informe de ciclos coa puntuación de cada versión." },
+    { t:"Análise de enquisas", a:"EncuestIA", o:"Informe Word da enquisa e presentación dos catro entregables ante o grupo." }
+  ],
+  keyH:"A túa chave de IA",
+  keyLead:"As apps usan a API do provedor coa túa propia chave. A chave gárdase só no teu navegador e nunca pasa por un servidor do curso.",
+  keyStepsH:"Crear a chave con límite de gasto",
+  keySteps:[
+    "Crea unha conta na plataforma de desenvolvedores do provedor (no curso, platform.openai.com).",
+    "Engade un método de pagamento e fixa un límite de gasto mensual baixo antes de crear a chave.",
+    "Crea unha chave de API, cópiaa e gárdaa nun lugar seguro: non se volve mostrar.",
+    "Pégaa na app, carga a lista de modelos dispoñibles para a túa chave e escolle un económico.",
+    "Se a chave queda exposta, revógaa na plataforma e crea outra."
+  ],
+  keyChooseH:"Como escoller modelo",
+  keyChoose:[
+    "Capacidade: os modelos grandes razoan mellor; os pequenos abondan para redactar e resumir.",
+    "Custo: págase por tokens (prezo por millón); redactar unha acta custa céntimos.",
+    "Xanela de contexto: canto texto cabe nunha petición; 1.000 tokens equivalen a unhas 5 ou 6 páxinas.",
+    "Privacidade: o uso por API non se emprega para adestrar por defecto, pero os datos de saúde son categoría especial do RXPD e non deben enviarse identificables."
+  ],
+  rulesH:"Normas de uso",
+  rulesLead:"Aplícanse en todas as sesións e en todas as apps.",
+  privH:"Protección de datos",
+  priv:[
+    "Só documentación anonimizada: nunca historias clínicas, listaxes de socios nin datos de saúde identificables.",
+    "Anonimiza antes de enviar. As apps enmascaran correos, DNI, teléfonos e IBAN e avisan de posibles nomes.",
+    "Nas enquisas non se mostran grupos de menos de 5 persoas nin cruzamentos que permitan identificar a alguén.",
+    "Cada participante usa a súa propia chave, gardada só no seu navegador."
+  ],
+  ethH:"Uso responsable",
+  eth:[
+    "Revisa todo o que propón a IA antes de usalo ou publicalo.",
+    "Declara o uso de IA cando corresponda.",
+    "Ningunha app dá doses, pautas nin consellos clínicos individuais.",
+    "A IA non inventa datos da asociación: o que falta márcase [COMPLETAR].",
+    "A puntuación simulada de SubvencIA orienta, pero non garante a do avaliador real."
+  ],
+  footOrg:"Curso «IA para asociacións de pacientes» · Instituto ProPatiens e Cátedra do Paciente da Universidade Miguel Hernández de Elche",
+  footDev:"Desenvolvemento:", footLic:"Licenza MIT"
+},
+en:{
+  eyebrow:"Course · ProPatiens Institute · UMH Patient Chair",
+  h1:"AI tools for <span>patient associations</span>",
+  sub:"Four single-file web apps, using your own AI key, for your association's internal communication, external communication, funding proposals and surveys.",
+  stApps:"apps", stSes:"sessions", stHours:"online", stLangs:"languages",
+  navApps:"Apps", navCourse:"Course", navKey:"AI key", navRules:"Rules of use",
+  appsH:"The four apps",
+  appsLead:"Each app runs in the browser, with no installation or server, using OpenAI, Google Gemini or Anthropic Claude. The AI proposes and the code checks.",
+  checks:"What the code checks", open:"Open app", soon:"In preparation", doiPend:"DOI pending", session:"Session",
+  shared:"All four apps share the association profile (name, mission, audiences, tone and approved sources) in a single JSON file, so you only fill it in once.",
+  apps:{
+    juntia:{ area:"Internal communication", what:"Board and general meeting notices with agenda; minutes from notes or audio with decisions, owners and deadlines; decision tracking; announcements to members and volunteers; volunteer welcome handbook.", chk:"Every decision in the minutes carries a verbatim quote from the notes; decisions without a quote are flagged; dates and deadlines are computed by code." },
+    difundia:{ area:"External communication", what:"Communication plan and calendar; one message adapted to social media, press release, website, newsletter and WhatsApp; plain-language versions per audience; Canva design brief.", chk:"Readability computed by code (Fernández-Huerta index); health claims cited to an approved source; external links, new figures and stigmatising wording flagged." },
+    subvencia:{ area:"Funding proposals", what:"Upload the call and the project outline; extracts the evaluation rubric; scores the project and improves it in cycles until it nears the maximum.", chk:"Every criterion carries its quote from the call; the total score is summed by code using the call's weights; a change is kept only if the score rises; nothing invented ([COMPLETAR] markers)." },
+    encuestia:{ area:"Survey analysis", what:"Upload an Excel or CSV file; describes each question; compares before and after; groups open answers into themes; generates a Word report with charts.", chk:"Every figure is computed by code; each theme carries verbatim answers; groups of fewer than 5 people are hidden to prevent re-identification." }
+  },
+  courseH:"The course",
+  courseLead:"Five 2-hour online sessions. Each association applies the apps to its own anonymised documents and leaves with four real deliverables.",
+  thN:"", thSes:"Session", thOut:"Deliverable", thMat:"Materials",
+  matSoon:"Coming soon",
+  sessions:[
+    { t:"Providers, models and your AI key", a:"Slides and key guide", o:"Key configured with a spending limit and the association profile saved as JSON." },
+    { t:"Internal communication", a:"JuntIA", o:"Reviewed minutes, notice for the next meeting and one internal announcement." },
+    { t:"External communication", a:"DifundIA", o:"Reviewed multichannel mini-campaign and a three-month communication calendar." },
+    { t:"Funding proposals", a:"SubvencIA", o:"Call rubric, improved project in Word and a cycle report with each version's score." },
+    { t:"Survey analysis", a:"EncuestIA", o:"Word survey report and presentation of the four deliverables to the group." }
+  ],
+  keyH:"Your AI key",
+  keyLead:"The apps call the provider's API with your own key. The key is stored only in your browser and never passes through a course server.",
+  keyStepsH:"Create a key with a spending limit",
+  keySteps:[
+    "Create an account on the provider's developer platform (in the course, platform.openai.com).",
+    "Add a payment method and set a low monthly spending limit before creating the key.",
+    "Create an API key, copy it and keep it somewhere safe: it is not shown again.",
+    "Paste it into the app, load the list of models available to your key and pick an inexpensive one.",
+    "If the key is exposed, revoke it on the platform and create a new one."
+  ],
+  keyChooseH:"How to choose a model",
+  keyChoose:[
+    "Capability: large models reason better; small ones are enough for drafting and summarising.",
+    "Cost: you pay per token (price per million); drafting minutes costs cents.",
+    "Context window: how much text fits in one request; 1,000 tokens are roughly 5 or 6 pages.",
+    "Privacy: API use is not used for training by default, but health data is a special category under the GDPR and must not be sent in identifiable form."
+  ],
+  rulesH:"Rules of use",
+  rulesLead:"They apply in every session and every app.",
+  privH:"Data protection",
+  priv:[
+    "Anonymised documents only: never clinical records, member lists or identifiable health data.",
+    "Anonymise before sending. The apps mask emails, ID numbers, phone numbers and IBANs and warn about possible names.",
+    "In surveys, groups of fewer than 5 people and cross-tabulations that could identify someone are not shown.",
+    "Each participant uses their own key, stored only in their browser."
+  ],
+  ethH:"Responsible use",
+  eth:[
+    "Review everything the AI proposes before using or publishing it.",
+    "Disclose AI use where appropriate.",
+    "No app gives doses, regimens or individual clinical advice.",
+    "The AI does not invent the association's data: anything missing is marked [COMPLETAR].",
+    "SubvencIA's simulated score is a guide; it does not guarantee the real evaluator's score."
+  ],
+  footOrg:"Course “AI for patient associations” · ProPatiens Institute and Patient Chair of Miguel Hernández University of Elche",
+  footDev:"Developed by", footLic:"MIT licence"
+},
+pt:{
+  eyebrow:"Curso · Instituto ProPatiens · Cátedra do Paciente UMH",
+  h1:"Ferramentas de IA para <span>associações de doentes</span>",
+  sub:"Quatro aplicações web de um só ficheiro, com a sua própria chave de IA, para a comunicação interna, a comunicação externa, os projetos de financiamento e os inquéritos da sua associação.",
+  stApps:"apps", stSes:"sessões", stHours:"online", stLangs:"línguas",
+  navApps:"Apps", navCourse:"Curso", navKey:"Chave de IA", navRules:"Normas de utilização",
+  appsH:"As quatro apps",
+  appsLead:"Cada app funciona no navegador, sem instalação nem servidor, com OpenAI, Google Gemini ou Anthropic Claude. A IA propõe e o código verifica.",
+  checks:"O que o código verifica", open:"Abrir app", soon:"Em preparação", doiPend:"DOI pendente", session:"Sessão",
+  shared:"As quatro apps partilham o perfil da associação (nome, missão, públicos, tom e fontes aprovadas) num único ficheiro JSON, para não o preencher quatro vezes.",
+  apps:{
+    juntia:{ area:"Comunicação interna", what:"Convocatórias de direção e assembleia com ordem de trabalhos; atas a partir de notas ou áudio com deliberações, responsáveis e prazos; acompanhamento das deliberações; comunicados a sócios e voluntários; manual de acolhimento.", chk:"Cada deliberação da ata leva uma citação literal das notas; as deliberações sem citação são assinaladas; as datas e os prazos são calculados por código." },
+    difundia:{ area:"Comunicação externa", what:"Plano e calendário de comunicação; uma mensagem adaptada a redes sociais, comunicado de imprensa, site, boletim e WhatsApp; versões por público em linguagem clara; briefing para Canva.", chk:"Legibilidade calculada por código (índice Fernández-Huerta); afirmações de saúde com citação de uma fonte aprovada; ligações externas, números novos e expressões estigmatizantes assinalados." },
+    subvencia:{ area:"Projetos de financiamento", what:"Carregue o aviso de abertura e o esquema do projeto; extrai a grelha de avaliação; pontua o projeto e melhora-o em ciclos até o aproximar do máximo.", chk:"Cada critério leva a sua citação do regulamento; a pontuação total é somada pelo código com os pesos do aviso; uma alteração só se mantém se a pontuação subir; nada inventado (marcas [COMPLETAR])." },
+    encuestia:{ area:"Análise de inquéritos", what:"Carregue um Excel ou CSV; descreve cada pergunta; compara antes e depois; agrupa respostas abertas em temas; gera um relatório Word com gráficos.", chk:"Todos os números são calculados pelo código; cada tema leva respostas literais; os grupos com menos de 5 pessoas são ocultados para evitar reidentificações." }
+  },
+  courseH:"O curso",
+  courseLead:"Cinco sessões online de 2 horas. Cada associação aplica as apps à sua própria documentação anonimizada e sai com quatro entregáveis reais.",
+  thN:"", thSes:"Sessão", thOut:"Entregável", thMat:"Materiais",
+  matSoon:"Brevemente",
+  sessions:[
+    { t:"Fornecedores, modelos e a sua chave de IA", a:"Apresentação e guia da chave", o:"Chave configurada com limite de gastos e perfil da associação em JSON." },
+    { t:"Comunicação interna", a:"JuntIA", o:"Ata revista, convocatória da próxima reunião e um comunicado interno." },
+    { t:"Comunicação externa", a:"DifundIA", o:"Minicampanha multicanal revista e calendário de comunicação de três meses." },
+    { t:"Projetos de financiamento", a:"SubvencIA", o:"Grelha de avaliação do aviso, projeto melhorado em Word e relatório de ciclos com a pontuação de cada versão." },
+    { t:"Análise de inquéritos", a:"EncuestIA", o:"Relatório Word do inquérito e apresentação dos quatro entregáveis ao grupo." }
+  ],
+  keyH:"A sua chave de IA",
+  keyLead:"As apps usam a API do fornecedor com a sua própria chave. A chave fica guardada apenas no seu navegador e nunca passa por um servidor do curso.",
+  keyStepsH:"Criar a chave com limite de gastos",
+  keySteps:[
+    "Crie uma conta na plataforma de programadores do fornecedor (no curso, platform.openai.com).",
+    "Adicione um método de pagamento e defina um limite de gastos mensal baixo antes de criar a chave.",
+    "Crie uma chave de API, copie-a e guarde-a num local seguro: não volta a ser mostrada.",
+    "Cole-a na app, carregue a lista de modelos disponíveis para a sua chave e escolha um económico.",
+    "Se a chave ficar exposta, revogue-a na plataforma e crie outra."
+  ],
+  keyChooseH:"Como escolher o modelo",
+  keyChoose:[
+    "Capacidade: os modelos grandes raciocinam melhor; os pequenos bastam para redigir e resumir.",
+    "Custo: paga-se por tokens (preço por milhão); redigir uma ata custa cêntimos.",
+    "Janela de contexto: quanto texto cabe num pedido; 1000 tokens equivalem a cerca de 5 ou 6 páginas.",
+    "Privacidade: a utilização por API não é usada para treino por defeito, mas os dados de saúde são categoria especial do RGPD e não devem ser enviados de forma identificável."
+  ],
+  rulesH:"Normas de utilização",
+  rulesLead:"Aplicam-se em todas as sessões e em todas as apps.",
+  privH:"Proteção de dados",
+  priv:[
+    "Apenas documentação anonimizada: nunca processos clínicos, listas de sócios nem dados de saúde identificáveis.",
+    "Anonimize antes de enviar. As apps mascaram e-mails, números de identificação, telefones e IBAN e avisam de possíveis nomes.",
+    "Nos inquéritos não se mostram grupos com menos de 5 pessoas nem cruzamentos que permitam identificar alguém.",
+    "Cada participante usa a sua própria chave, guardada apenas no seu navegador."
+  ],
+  ethH:"Utilização responsável",
+  eth:[
+    "Reveja tudo o que a IA propõe antes de o usar ou publicar.",
+    "Declare a utilização de IA quando for o caso.",
+    "Nenhuma app dá doses, posologias nem conselhos clínicos individuais.",
+    "A IA não inventa dados da associação: o que falta fica marcado [COMPLETAR].",
+    "A pontuação simulada do SubvencIA orienta, mas não garante a do avaliador real."
+  ],
+  footOrg:"Curso «IA para associações de doentes» · Instituto ProPatiens e Cátedra do Paciente da Universidade Miguel Hernández de Elche",
+  footDev:"Desenvolvimento:", footLic:"Licença MIT"
+}
+};
+
+let lang = "es";
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function render(){
+  const L = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = L[el.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = L[el.dataset.i18nHtml]; });
+  document.querySelectorAll("#langs button").forEach(b => b.classList.toggle("active", b.dataset.l === lang));
+
+  document.getElementById("grid").innerHTML = APPS.map(a => {
+    const A = L.apps[a.id];
+    const url = `https://fborrasumh.github.io/${a.id}/`;
+    const btn = a.ready
+      ? `<a class="btn" href="${url}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> ${esc(L.open)}</a>`
+      : `<span class="btn off"><i class="ti ti-clock"></i> ${esc(L.soon)}</span>`;
+    const doi = a.doi
+      ? `<a href="https://doi.org/${a.doi}" target="_blank" rel="noopener">DOI ${esc(a.doi)}</a>`
+      : esc(L.doiPend);
+    return `<article class="card" style="--c:var(${a.c})">
+      <div class="card-h"><div class="icon-box"><i class="ti ${a.icon}"></i></div>
+        <div><h3>${a.name}</h3><div class="ses">${esc(L.session)} ${a.ses} · ${esc(A.area)}</div></div></div>
+      <p>${esc(A.what)}</p>
+      <div class="chk"><b>${esc(L.checks)}</b>${esc(A.chk)}</div>
+      <div class="foot">${btn}<span class="doi">${doi}</span></div>
+    </article>`;
+  }).join("");
+
+  document.getElementById("sessions").innerHTML =
+    `<div class="srow head"><div></div><div>${esc(L.thSes)}</div><div class="hide-sm">${esc(L.thOut)}</div><div class="hide-sm">${esc(L.thMat)}</div></div>` +
+    L.sessions.map((s,i) => `<div class="srow" style="--c:var(${SES_COLOR[i+1]})">
+      <div class="snum">${i+1}</div>
+      <div><div class="stit">${esc(s.t)}</div><div class="sapp">${esc(s.a)}</div></div>
+      <div class="hide-sm">${esc(s.o)}</div>
+      <div class="hide-sm"><span class="mat"><i class="ti ti-folder"></i> ${esc(L.matSoon)}</span></div>
+    </div>`).join("");
+
+  const list = (id, arr) => { document.getElementById(id).innerHTML = arr.map(x => `<li>${esc(x)}</li>`).join(""); };
+  list("keySteps", L.keySteps); list("keyChoose", L.keyChoose); list("priv", L.priv); list("eth", L.eth);
+}
+
+function setLang(l){
+  lang = l;
+  try { localStorage.setItem("propatiens-lang", l); } catch(e) {}
+  render();
+}
+
+document.getElementById("langs").innerHTML = LANGS.map(l => `<button data-l="${l}" onclick="setLang('${l}')">${l.toUpperCase()}</button>`).join("");
+try {
+  const saved = localStorage.getItem("propatiens-lang");
+  const nav = (navigator.language || "es").slice(0,2);
+  lang = LANGS.includes(saved) ? saved : (LANGS.includes(nav) ? nav : "es");
+} catch(e) {}
+render();
+</script>
+</body>
+</html>
