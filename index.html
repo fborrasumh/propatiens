@@ -59,9 +59,6 @@ h2 { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; lette
 .card .chk b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 3px; }
 .card .foot { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding-top: 6px; }
 .btn { display: inline-flex; align-items: center; gap: 6px; font: 600 13px 'Inter', sans-serif; padding: 7px 14px; border-radius: 99px; text-decoration: none; background: var(--c); color: #fff; }
-.btn.off { background: #e9e8e4; color: var(--muted); pointer-events: none; }
-.doi { font-size: 12px; color: var(--muted); }
-.doi a { color: var(--muted); }
 .shared { margin-top: 16px; font-size: 14px; color: #555; background: var(--surface); border: .5px solid var(--border); border-radius: 12px; padding: 14px 18px; }
 
 /* SESSIONS */
@@ -183,17 +180,12 @@ footer a { text-decoration: none; }
 </footer>
 
 <script>
-/* =====================================================
-   APPS DEL PORTAL
-   ready: true cuando la app esté publicada en GitHub Pages.
-   doi:   déjalo "" hasta acuñarlo en Zenodo; después pega
-          el DOI de concepto (p. ej. "10.5281/zenodo.1234567").
-   ===================================================== */
+/* APPS DEL PORTAL: cada ficha enlaza a https://fborrasumh.github.io/<id>/ */
 const APPS = [
-  { id:"juntia",    name:"JuntIA",    ses:2, icon:"ti-users-group",   c:"--int", ready:false, doi:"" },
-  { id:"difundia",  name:"DifundIA",  ses:3, icon:"ti-speakerphone",  c:"--ext", ready:false, doi:"" },
-  { id:"subvencia", name:"SubvencIA", ses:4, icon:"ti-file-certificate", c:"--sub", ready:false, doi:"" },
-  { id:"encuestia", name:"EncuestIA", ses:5, icon:"ti-chart-bar",     c:"--enc", ready:false, doi:"" }
+  { id:"juntia",    name:"JuntIA",    ses:2, icon:"ti-users-group",   c:"--int" },
+  { id:"difundia",  name:"DifundIA",  ses:3, icon:"ti-speakerphone",  c:"--ext" },
+  { id:"subvencia", name:"SubvencIA", ses:4, icon:"ti-file-certificate", c:"--sub" },
+  { id:"encuestia", name:"EncuestIA", ses:5, icon:"ti-chart-bar",     c:"--enc" }
 ];
 const SES_COLOR = { 1:"--text", 2:"--int", 3:"--ext", 4:"--sub", 5:"--enc" };
 const LANGS = ["es","ca","eu","gl","en","pt"];
@@ -207,7 +199,7 @@ es:{
   navApps:"Apps", navCourse:"Curso", navKey:"Clave de IA", navRules:"Normas de uso",
   appsH:"Las cuatro apps",
   appsLead:"Cada app funciona en el navegador, sin instalación ni servidor, con OpenAI, Google Gemini o Anthropic Claude. La IA propone y el código comprueba.",
-  checks:"Qué comprueba el código", open:"Abrir app", soon:"En preparación", doiPend:"DOI pendiente", session:"Sesión",
+  checks:"Qué comprueba el código", open:"Abrir app", session:"Sesión",
   shared:"Las cuatro apps comparten el perfil de la asociación (nombre, misión, públicos, tono y fuentes aprobadas) en un único archivo JSON, para no rellenarlo cuatro veces.",
   apps:{
     juntia:{ area:"Comunicación interna", what:"Convocatorias de junta y asamblea con orden del día; actas desde notas o audio con acuerdos, responsables y plazos; seguimiento de acuerdos; comunicados a socios y voluntariado; manual de acogida.", chk:"Cada acuerdo del acta lleva una cita literal de las notas; los acuerdos sin cita se marcan; las fechas y los plazos se calculan por código." },
@@ -271,7 +263,7 @@ ca:{
   navApps:"Apps", navCourse:"Curs", navKey:"Clau d'IA", navRules:"Normes d'ús",
   appsH:"Les quatre apps",
   appsLead:"Cada app funciona al navegador, sense instal·lació ni servidor, amb OpenAI, Google Gemini o Anthropic Claude. La IA proposa i el codi comprova.",
-  checks:"Què comprova el codi", open:"Obrir app", soon:"En preparació", doiPend:"DOI pendent", session:"Sessió",
+  checks:"Què comprova el codi", open:"Obrir app", session:"Sessió",
   shared:"Les quatre apps comparteixen el perfil de l'associació (nom, missió, públics, to i fonts aprovades) en un únic fitxer JSON, per no omplir-lo quatre vegades.",
   apps:{
     juntia:{ area:"Comunicació interna", what:"Convocatòries de junta i assemblea amb ordre del dia; actes a partir de notes o àudio amb acords, responsables i terminis; seguiment d'acords; comunicats a socis i voluntariat; manual d'acollida.", chk:"Cada acord de l'acta porta una cita literal de les notes; els acords sense cita es marquen; les dates i els terminis es calculen per codi." },
@@ -335,7 +327,7 @@ eu:{
   navApps:"Aplikazioak", navCourse:"Ikastaroa", navKey:"AA gakoa", navRules:"Erabilera arauak",
   appsH:"Lau aplikazioak",
   appsLead:"Aplikazio bakoitza nabigatzailean dabil, instalaziorik eta zerbitzaririk gabe, OpenAI, Google Gemini edo Anthropic Claude-rekin. AAk proposatzen du eta kodeak egiaztatzen du.",
-  checks:"Kodeak zer egiaztatzen duen", open:"Ireki aplikazioa", soon:"Prestatzen", doiPend:"DOI zain", session:"Saioa",
+  checks:"Kodeak zer egiaztatzen duen", open:"Ireki aplikazioa", session:"Saioa",
   shared:"Lau aplikazioek elkartearen profila partekatzen dute (izena, misioa, publikoak, tonua eta onartutako iturriak) JSON fitxategi bakar batean, lau aldiz bete behar ez izateko.",
   apps:{
     juntia:{ area:"Barne komunikazioa", what:"Zuzendaritza batzarren eta batzar orokorren deialdiak gai zerrendarekin; aktak oharretatik edo audiotik, erabaki, arduradun eta epeekin; erabakien jarraipena; bazkide eta boluntarioentzako oharrak; harrera eskuliburua.", chk:"Aktako erabaki bakoitzak oharretako aipu literal bat darama; aipurik gabeko erabakiak markatu egiten dira; datak eta epeak kodez kalkulatzen dira." },
@@ -399,7 +391,7 @@ gl:{
   navApps:"Apps", navCourse:"Curso", navKey:"Chave de IA", navRules:"Normas de uso",
   appsH:"As catro apps",
   appsLead:"Cada app funciona no navegador, sen instalación nin servidor, con OpenAI, Google Gemini ou Anthropic Claude. A IA propón e o código comproba.",
-  checks:"Que comproba o código", open:"Abrir app", soon:"En preparación", doiPend:"DOI pendente", session:"Sesión",
+  checks:"Que comproba o código", open:"Abrir app", session:"Sesión",
   shared:"As catro apps comparten o perfil da asociación (nome, misión, públicos, ton e fontes aprobadas) nun único ficheiro JSON, para non enchelo catro veces.",
   apps:{
     juntia:{ area:"Comunicación interna", what:"Convocatorias de xunta e asemblea con orde do día; actas a partir de notas ou audio con acordos, responsables e prazos; seguimento de acordos; comunicados a socios e voluntariado; manual de acollida.", chk:"Cada acordo da acta leva unha cita literal das notas; os acordos sen cita márcanse; as datas e os prazos calcúlanse por código." },
@@ -463,7 +455,7 @@ en:{
   navApps:"Apps", navCourse:"Course", navKey:"AI key", navRules:"Rules of use",
   appsH:"The four apps",
   appsLead:"Each app runs in the browser, with no installation or server, using OpenAI, Google Gemini or Anthropic Claude. The AI proposes and the code checks.",
-  checks:"What the code checks", open:"Open app", soon:"In preparation", doiPend:"DOI pending", session:"Session",
+  checks:"What the code checks", open:"Open app", session:"Session",
   shared:"All four apps share the association profile (name, mission, audiences, tone and approved sources) in a single JSON file, so you only fill it in once.",
   apps:{
     juntia:{ area:"Internal communication", what:"Board and general meeting notices with agenda; minutes from notes or audio with decisions, owners and deadlines; decision tracking; announcements to members and volunteers; volunteer welcome handbook.", chk:"Every decision in the minutes carries a verbatim quote from the notes; decisions without a quote are flagged; dates and deadlines are computed by code." },
@@ -527,7 +519,7 @@ pt:{
   navApps:"Apps", navCourse:"Curso", navKey:"Chave de IA", navRules:"Normas de utilização",
   appsH:"As quatro apps",
   appsLead:"Cada app funciona no navegador, sem instalação nem servidor, com OpenAI, Google Gemini ou Anthropic Claude. A IA propõe e o código verifica.",
-  checks:"O que o código verifica", open:"Abrir app", soon:"Em preparação", doiPend:"DOI pendente", session:"Sessão",
+  checks:"O que o código verifica", open:"Abrir app", session:"Sessão",
   shared:"As quatro apps partilham o perfil da associação (nome, missão, públicos, tom e fontes aprovadas) num único ficheiro JSON, para não o preencher quatro vezes.",
   apps:{
     juntia:{ area:"Comunicação interna", what:"Convocatórias de direção e assembleia com ordem de trabalhos; atas a partir de notas ou áudio com deliberações, responsáveis e prazos; acompanhamento das deliberações; comunicados a sócios e voluntários; manual de acolhimento.", chk:"Cada deliberação da ata leva uma citação literal das notas; as deliberações sem citação são assinaladas; as datas e os prazos são calculados por código." },
@@ -599,18 +591,13 @@ function render(){
   document.getElementById("grid").innerHTML = APPS.map(a => {
     const A = L.apps[a.id];
     const url = `https://fborrasumh.github.io/${a.id}/`;
-    const btn = a.ready
-      ? `<a class="btn" href="${url}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> ${esc(L.open)}</a>`
-      : `<span class="btn off"><i class="ti ti-clock"></i> ${esc(L.soon)}</span>`;
-    const doi = a.doi
-      ? `<a href="https://doi.org/${a.doi}" target="_blank" rel="noopener">DOI ${esc(a.doi)}</a>`
-      : esc(L.doiPend);
+    const btn = `<a class="btn" href="${url}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> ${esc(L.open)}</a>`;
     return `<article class="card" style="--c:var(${a.c})">
       <div class="card-h"><div class="icon-box"><i class="ti ${a.icon}"></i></div>
         <div><h3>${a.name}</h3><div class="ses">${esc(L.session)} ${a.ses} · ${esc(A.area)}</div></div></div>
       <p>${esc(A.what)}</p>
       <div class="chk"><b>${esc(L.checks)}</b>${esc(A.chk)}</div>
-      <div class="foot">${btn}<span class="doi">${doi}</span></div>
+      <div class="foot">${btn}</div>
     </article>`;
   }).join("");
 

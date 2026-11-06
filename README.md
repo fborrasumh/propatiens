@@ -15,10 +15,7 @@ Reúne las cuatro apps del curso, los materiales de cada sesión, la guía para 
 
 ## Mantenimiento
 
-En `index.html`, el array `APPS` controla las fichas:
-
-- `ready: true` cuando la app esté publicada en `https://fborrasumh.github.io/<id>/` (activa el botón «Abrir app»).
-- `doi: "10.5281/zenodo.XXXXXXX"` cuando se acuñe el DOI de concepto en Zenodo.
+En `index.html`, el array `APPS` controla las fichas; cada una enlaza a `https://fborrasumh.github.io/<id>/`.
 
 Los logotipos están en `assets/` (versión blanca para la cabecera oscura).
 
