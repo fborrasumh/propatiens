@@ -63,13 +63,12 @@ h2 { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; lette
 
 /* SESSIONS */
 .sessions { background: var(--surface); border: .5px solid var(--border); border-radius: 12px; overflow: hidden; }
-.srow { display: grid; grid-template-columns: 56px 1fr 1fr 150px; gap: 16px; padding: 16px 18px; border-bottom: .5px solid var(--border); align-items: start; font-size: 14px; }
+.srow { display: grid; grid-template-columns: 56px 1fr 1fr; gap: 16px; padding: 16px 18px; border-bottom: .5px solid var(--border); align-items: start; font-size: 14px; }
 .srow:last-child { border-bottom: 0; }
 .srow.head { background: #faf9f7; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 10px 18px; }
 .snum { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--c, var(--text)); }
 .stit { font-weight: 600; }
 .sapp { font-size: 12px; color: var(--muted); }
-.mat { font-size: 12px; color: var(--muted); display: inline-flex; gap: 5px; align-items: center; }
 
 /* STEPS / RULES */
 .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
@@ -209,8 +208,7 @@ es:{
   },
   courseH:"El curso",
   courseLead:"Cinco sesiones online de 2 horas. Cada asociación aplica las apps a su propia documentación anonimizada y sale con cuatro entregables reales.",
-  thN:"", thSes:"Sesión", thOut:"Entregable", thMat:"Materiales",
-  matSoon:"Próximamente",
+  thN:"", thSes:"Sesión", thOut:"Entregable",
   sessions:[
     { t:"Proveedores, modelos y tu clave de IA", a:"Presentación y guía de la clave", o:"Clave configurada con límite de gasto y perfil de la asociación en JSON." },
     { t:"Comunicación interna", a:"JuntIA", o:"Acta revisada, convocatoria de la próxima reunión y un comunicado interno." },
@@ -273,8 +271,7 @@ ca:{
   },
   courseH:"El curs",
   courseLead:"Cinc sessions en línia de 2 hores. Cada associació aplica les apps a la seua pròpia documentació anonimitzada i n'ix amb quatre lliurables reals.",
-  thN:"", thSes:"Sessió", thOut:"Lliurable", thMat:"Materials",
-  matSoon:"Pròximament",
+  thN:"", thSes:"Sessió", thOut:"Lliurable",
   sessions:[
     { t:"Proveïdors, models i la teua clau d'IA", a:"Presentació i guia de la clau", o:"Clau configurada amb límit de despesa i perfil de l'associació en JSON." },
     { t:"Comunicació interna", a:"JuntIA", o:"Acta revisada, convocatòria de la pròxima reunió i un comunicat intern." },
@@ -337,8 +334,7 @@ eu:{
   },
   courseH:"Ikastaroa",
   courseLead:"2 orduko bost saio online. Elkarte bakoitzak aplikazioak bere dokumentazio anonimizatuari aplikatzen dizkio eta benetako lau entregagarrirekin ateratzen da.",
-  thN:"", thSes:"Saioa", thOut:"Entregagarria", thMat:"Materialak",
-  matSoon:"Laster",
+  thN:"", thSes:"Saioa", thOut:"Entregagarria",
   sessions:[
     { t:"Hornitzaileak, ereduak eta zure AA gakoa", a:"Aurkezpena eta gakoaren gida", o:"Gastu mugarekin konfiguratutako gakoa eta elkartearen profila JSONen." },
     { t:"Barne komunikazioa", a:"JuntIA", o:"Berrikusitako akta, hurrengo bileraren deialdia eta barne ohar bat." },
@@ -401,8 +397,7 @@ gl:{
   },
   courseH:"O curso",
   courseLead:"Cinco sesións en liña de 2 horas. Cada asociación aplica as apps á súa propia documentación anonimizada e sae con catro entregables reais.",
-  thN:"", thSes:"Sesión", thOut:"Entregable", thMat:"Materiais",
-  matSoon:"Proximamente",
+  thN:"", thSes:"Sesión", thOut:"Entregable",
   sessions:[
     { t:"Provedores, modelos e a túa chave de IA", a:"Presentación e guía da chave", o:"Chave configurada con límite de gasto e perfil da asociación en JSON." },
     { t:"Comunicación interna", a:"JuntIA", o:"Acta revisada, convocatoria da próxima reunión e un comunicado interno." },
@@ -465,8 +460,7 @@ en:{
   },
   courseH:"The course",
   courseLead:"Five 2-hour online sessions. Each association applies the apps to its own anonymised documents and leaves with four real deliverables.",
-  thN:"", thSes:"Session", thOut:"Deliverable", thMat:"Materials",
-  matSoon:"Coming soon",
+  thN:"", thSes:"Session", thOut:"Deliverable",
   sessions:[
     { t:"Providers, models and your AI key", a:"Slides and key guide", o:"Key configured with a spending limit and the association profile saved as JSON." },
     { t:"Internal communication", a:"JuntIA", o:"Reviewed minutes, notice for the next meeting and one internal announcement." },
@@ -529,8 +523,7 @@ pt:{
   },
   courseH:"O curso",
   courseLead:"Cinco sessões online de 2 horas. Cada associação aplica as apps à sua própria documentação anonimizada e sai com quatro entregáveis reais.",
-  thN:"", thSes:"Sessão", thOut:"Entregável", thMat:"Materiais",
-  matSoon:"Brevemente",
+  thN:"", thSes:"Sessão", thOut:"Entregável",
   sessions:[
     { t:"Fornecedores, modelos e a sua chave de IA", a:"Apresentação e guia da chave", o:"Chave configurada com limite de gastos e perfil da associação em JSON." },
     { t:"Comunicação interna", a:"JuntIA", o:"Ata revista, convocatória da próxima reunião e um comunicado interno." },
@@ -602,12 +595,11 @@ function render(){
   }).join("");
 
   document.getElementById("sessions").innerHTML =
-    `<div class="srow head"><div></div><div>${esc(L.thSes)}</div><div class="hide-sm">${esc(L.thOut)}</div><div class="hide-sm">${esc(L.thMat)}</div></div>` +
+    `<div class="srow head"><div></div><div>${esc(L.thSes)}</div><div class="hide-sm">${esc(L.thOut)}</div></div>` +
     L.sessions.map((s,i) => `<div class="srow" style="--c:var(${SES_COLOR[i+1]})">
       <div class="snum">${i+1}</div>
       <div><div class="stit">${esc(s.t)}</div><div class="sapp">${esc(s.a)}</div></div>
       <div class="hide-sm">${esc(s.o)}</div>
-      <div class="hide-sm"><span class="mat"><i class="ti ti-folder"></i> ${esc(L.matSoon)}</span></div>
     </div>`).join("");
 
   const list = (id, arr) => { document.getElementById(id).innerHTML = arr.map(x => `<li>${esc(x)}</li>`).join(""); };
