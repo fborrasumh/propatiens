@@ -65,6 +65,8 @@ h2 { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; lette
 .sessions { background: var(--surface); border: .5px solid var(--border); border-radius: 12px; overflow: hidden; }
 .srow { display: grid; grid-template-columns: 56px 1fr 1fr; gap: 16px; padding: 16px 18px; border-bottom: .5px solid var(--border); align-items: start; font-size: 14px; }
 .srow:last-child { border-bottom: 0; }
+.slink { display: inline-block; margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; }
+.slink:hover { text-decoration: underline; }
 .srow.head { background: #faf9f7; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 10px 18px; }
 .snum { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--c, var(--text)); }
 .stit { font-weight: 600; }
@@ -187,6 +189,7 @@ const APPS = [
   { id:"encuestia", name:"EncuestIA", ses:5, icon:"ti-chart-bar",     c:"--enc" }
 ];
 const SES_COLOR = { 1:"--text", 2:"--int", 3:"--ext", 4:"--sub", 5:"--enc" };
+const SES_LINK = { 1:"sesion1/" };
 const LANGS = ["es","ca","eu","gl","en","pt"];
 
 const T = {
@@ -198,6 +201,7 @@ es:{
   navApps:"Apps", navCourse:"Curso", navKey:"Clave de IA", navRules:"Normas de uso",
   appsH:"Las cuatro apps",
   appsLead:"Cada app funciona en el navegador, sin instalación ni servidor, con OpenAI, Google Gemini o Anthropic Claude. La IA propone y el código comprueba.",
+  slides:"Ver la presentación",
   checks:"Qué comprueba el código", open:"Abrir app", session:"Sesión",
   shared:"El perfil de la asociación (nombre, misión, públicos, tono, fuentes aprobadas y fechas clave) se rellena en cualquiera de las apps, se descarga en JSON y se sube en la siguiente: no hace falta escribirlo cuatro veces.",
   apps:{
@@ -230,7 +234,7 @@ es:{
   keyChoose:[
     "Capacidad: los modelos grandes razonan mejor; los pequeños bastan para redactar y resumir.",
     "Coste: se paga por tokens (precio por millón); redactar un acta cuesta céntimos.",
-    "Ventana de contexto: cuánto texto cabe en una petición; 1.000 tokens equivalen a unas 5 o 6 páginas.",
+    "Ventana de contexto: cuánto texto cabe en una petición; 1.000 tokens equivalen a unas 2 o 3 páginas.",
     "Privacidad: el uso por API no se emplea para entrenar por defecto, pero los datos de salud son categoría especial del RGPD y no deben enviarse identificables."
   ],
   rulesH:"Normas de uso",
@@ -261,6 +265,7 @@ ca:{
   navApps:"Apps", navCourse:"Curs", navKey:"Clau d'IA", navRules:"Normes d'ús",
   appsH:"Les quatre apps",
   appsLead:"Cada app funciona al navegador, sense instal·lació ni servidor, amb OpenAI, Google Gemini o Anthropic Claude. La IA proposa i el codi comprova.",
+  slides:"Veure la presentació (en castellà)",
   checks:"Què comprova el codi", open:"Obrir app", session:"Sessió",
   shared:"El perfil de l'associació (nom, missió, públics, to, fonts aprovades i dates clau) s'omple en qualsevol de les apps, es descarrega en JSON i es puja a la següent: no cal escriure'l quatre vegades.",
   apps:{
@@ -293,7 +298,7 @@ ca:{
   keyChoose:[
     "Capacitat: els models grans raonen millor; els xicotets basten per a redactar i resumir.",
     "Cost: es paga per tokens (preu per milió); redactar una acta costa cèntims.",
-    "Finestra de context: quant de text cap en una petició; 1.000 tokens equivalen a unes 5 o 6 pàgines.",
+    "Finestra de context: quant de text cap en una petició; 1.000 tokens equivalen a unes 2 o 3 pàgines.",
     "Privacitat: l'ús per API no s'empra per a entrenar per defecte, però les dades de salut són categoria especial del RGPD i no s'han d'enviar identificables."
   ],
   rulesH:"Normes d'ús",
@@ -324,6 +329,7 @@ eu:{
   navApps:"Aplikazioak", navCourse:"Ikastaroa", navKey:"AA gakoa", navRules:"Erabilera arauak",
   appsH:"Lau aplikazioak",
   appsLead:"Aplikazio bakoitza nabigatzailean dabil, instalaziorik eta zerbitzaririk gabe, OpenAI, Google Gemini edo Anthropic Claude-rekin. AAk proposatzen du eta kodeak egiaztatzen du.",
+  slides:"Ikusi aurkezpena (gaztelaniaz)",
   checks:"Kodeak zer egiaztatzen duen", open:"Ireki aplikazioa", session:"Saioa",
   shared:"Elkartearen profila (izena, misioa, publikoak, tonua, onartutako iturriak eta data garrantzitsuak) edozein aplikaziotan betetzen da, JSON gisa deskargatu eta hurrengoan igotzen da: ez da lau aldiz idatzi behar.",
   apps:{
@@ -356,7 +362,7 @@ eu:{
   keyChoose:[
     "Gaitasuna: eredu handiek hobeto arrazoitzen dute; txikiak nahikoak dira idazteko eta laburtzeko.",
     "Kostua: tokenen arabera ordaintzen da (milioiko prezioa); akta bat idazteak zentimo batzuk balio ditu.",
-    "Testuinguru leihoa: eskaera batean zenbat testu sartzen den; 1.000 token 5 edo 6 orrialde inguru dira.",
+    "Testuinguru leihoa: eskaera batean zenbat testu sartzen den; 1.000 token 2 edo 3 orrialde inguru dira.",
     "Pribatutasuna: APIaren erabilera ez da lehenespenez entrenatzeko erabiltzen, baina osasun datuak DBEOren kategoria berezia dira eta ez dira identifikagarri bidali behar."
   ],
   rulesH:"Erabilera arauak",
@@ -387,6 +393,7 @@ gl:{
   navApps:"Apps", navCourse:"Curso", navKey:"Chave de IA", navRules:"Normas de uso",
   appsH:"As catro apps",
   appsLead:"Cada app funciona no navegador, sen instalación nin servidor, con OpenAI, Google Gemini ou Anthropic Claude. A IA propón e o código comproba.",
+  slides:"Ver a presentación (en castelán)",
   checks:"Que comproba o código", open:"Abrir app", session:"Sesión",
   shared:"O perfil da asociación (nome, misión, públicos, ton, fontes aprobadas e datas clave) énchese en calquera das apps, descárgase en JSON e súbese na seguinte: non fai falta escribilo catro veces.",
   apps:{
@@ -419,7 +426,7 @@ gl:{
   keyChoose:[
     "Capacidade: os modelos grandes razoan mellor; os pequenos abondan para redactar e resumir.",
     "Custo: págase por tokens (prezo por millón); redactar unha acta custa céntimos.",
-    "Xanela de contexto: canto texto cabe nunha petición; 1.000 tokens equivalen a unhas 5 ou 6 páxinas.",
+    "Xanela de contexto: canto texto cabe nunha petición; 1.000 tokens equivalen a unhas 2 ou 3 páxinas.",
     "Privacidade: o uso por API non se emprega para adestrar por defecto, pero os datos de saúde son categoría especial do RXPD e non deben enviarse identificables."
   ],
   rulesH:"Normas de uso",
@@ -450,6 +457,7 @@ en:{
   navApps:"Apps", navCourse:"Course", navKey:"AI key", navRules:"Rules of use",
   appsH:"The four apps",
   appsLead:"Each app runs in the browser, with no installation or server, using OpenAI, Google Gemini or Anthropic Claude. The AI proposes and the code checks.",
+  slides:"View the slides (in Spanish)",
   checks:"What the code checks", open:"Open app", session:"Session",
   shared:"The association profile (name, mission, audiences, tone, approved sources and key dates) is filled in in any of the apps, downloaded as JSON and uploaded in the next one: no need to write it four times.",
   apps:{
@@ -482,7 +490,7 @@ en:{
   keyChoose:[
     "Capability: large models reason better; small ones are enough for drafting and summarising.",
     "Cost: you pay per token (price per million); drafting minutes costs cents.",
-    "Context window: how much text fits in one request; 1,000 tokens are roughly 5 or 6 pages.",
+    "Context window: how much text fits in one request; 1,000 tokens are roughly 2 or 3 pages.",
     "Privacy: API use is not used for training by default, but health data is a special category under the GDPR and must not be sent in identifiable form."
   ],
   rulesH:"Rules of use",
@@ -513,6 +521,7 @@ pt:{
   navApps:"Apps", navCourse:"Curso", navKey:"Chave de IA", navRules:"Normas de utilização",
   appsH:"As quatro apps",
   appsLead:"Cada app funciona no navegador, sem instalação nem servidor, com OpenAI, Google Gemini ou Anthropic Claude. A IA propõe e o código verifica.",
+  slides:"Ver a apresentação (em espanhol)",
   checks:"O que o código verifica", open:"Abrir app", session:"Sessão",
   shared:"O perfil da associação (nome, missão, públicos, tom, fontes aprovadas e datas-chave) preenche-se em qualquer uma das apps, transfere-se em JSON e carrega-se na seguinte: não é preciso escrevê-lo quatro vezes.",
   apps:{
@@ -545,7 +554,7 @@ pt:{
   keyChoose:[
     "Capacidade: os modelos grandes raciocinam melhor; os pequenos bastam para redigir e resumir.",
     "Custo: paga-se por tokens (preço por milhão); redigir uma ata custa cêntimos.",
-    "Janela de contexto: quanto texto cabe num pedido; 1000 tokens equivalem a cerca de 5 ou 6 páginas.",
+    "Janela de contexto: quanto texto cabe num pedido; 1000 tokens equivalem a cerca de 2 ou 3 páginas.",
     "Privacidade: a utilização por API não é usada para treino por defeito, mas os dados de saúde são categoria especial do RGPD e não devem ser enviados de forma identificável."
   ],
   rulesH:"Normas de utilização",
@@ -598,7 +607,7 @@ function render(){
     `<div class="srow head"><div></div><div>${esc(L.thSes)}</div><div class="hide-sm">${esc(L.thOut)}</div></div>` +
     L.sessions.map((s,i) => `<div class="srow" style="--c:var(${SES_COLOR[i+1]})">
       <div class="snum">${i+1}</div>
-      <div><div class="stit">${esc(s.t)}</div><div class="sapp">${esc(s.a)}</div></div>
+      <div><div class="stit">${esc(s.t)}</div><div class="sapp">${esc(s.a)}</div>${SES_LINK[i+1] ? `<a class="slink" href="${SES_LINK[i+1]}">${esc(L.slides)} →</a>` : ""}</div>
       <div class="hide-sm">${esc(s.o)}</div>
     </div>`).join("");
 

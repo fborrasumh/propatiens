@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sesión 1 · Proveedores, modelos y tu clave de IA — IA para asociaciones de pacientes</title>
+<meta name="description" content="Presentación de la sesión 1 del curso «IA para asociaciones de pacientes» (Instituto ProPatiens y Cátedra del Paciente UMH): qué hay detrás de un chat de IA, cuánto cuesta, cómo elegir modelo y cómo crear una clave de API con límite de gasto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f7f5; --surface: #fff; --border: #e4e3df; --text: #1a1916; --muted: #6f6d67;
+  --accent: #1a4fd8; --int: #1a4fd8; --ext: #c2186b; --sub: #126649; --enc: #6429a8;
+  --dark: #13213a; --warn: #b45309; --ok: #126649; --bad: #b42318;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #0d1626; color: var(--text); line-height: 1.45; overflow: hidden; }
+a { color: var(--accent); }
+h1, h2, h3, .big { font-family: 'Sora', 'Inter', system-ui, sans-serif; letter-spacing: -.02em; }
+
+/* ── escenario 16:9 ── */
+#stage { position: fixed; left: 50%; top: 50%; width: 1280px; height: 720px; transform-origin: center center; }
+.slide { position: absolute; inset: 0; background: var(--bg); padding: 56px 72px 64px; display: none; flex-direction: column; overflow: hidden; border-radius: 6px; }
+.slide.on { display: flex; }
+.slide h2 { font-size: 40px; font-weight: 800; line-height: 1.1; margin-bottom: 10px; }
+.slide .lead { font-size: 21px; color: var(--muted); max-width: 980px; margin-bottom: 22px; }
+.kicker { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--c, var(--accent)); margin-bottom: 10px; }
+.slide p, .slide li { font-size: 20px; }
+.slide ul { padding-left: 1.1em; }
+.slide li { margin: 6px 0; }
+.body { flex: 1; min-height: 0; display: flex; gap: 40px; align-items: center; }
+.col { flex: 1; min-width: 0; }
+.col.narrow { flex: .8; }
+.fig { flex: 1.1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+.fig img { max-width: 100%; max-height: 430px; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.08); background: #fff; }
+.fig figcaption, .src { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.src { position: absolute; left: 72px; bottom: 22px; right: 220px; }
+.foot { position: absolute; right: 28px; bottom: 20px; font-size: 13px; color: var(--muted); }
+.dark { background: radial-gradient(1200px 600px at 85% 15%, #2a3f6b 0, var(--dark) 60%); color: #fff; }
+.dark .lead { color: #c9d3e6; }
+.dark .foot, .dark .src { color: #93a1bd; }
+.sep { justify-content: center; }
+.sep .num { font-family: 'Sora', 'Inter', system-ui, sans-serif; font-size: 120px; font-weight: 800; line-height: 1; color: var(--c, #6ea0ff); opacity: .9; }
+.sep h2 { font-size: 58px; margin: 6px 0 14px; }
+.sep .lead { font-size: 24px; max-width: 900px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+.card h3 { font-size: 21px; margin-bottom: 6px; }
+.card p { font-size: 17px; color: #45433e; }
+.cards { display: grid; gap: 16px; width: 100%; }
+.c2 { grid-template-columns: repeat(2, 1fr); } .c3 { grid-template-columns: repeat(3, 1fr); } .c4 { grid-template-columns: repeat(4, 1fr); }
+.tag { display: inline-block; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 99px; background: #eef2fd; color: var(--accent); }
+.pill { display: inline-block; font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 99px; background: rgba(255,255,255,.12); color: #fff; margin: 4px 6px 0 0; }
+.note-box { border-left: 4px solid var(--c, var(--accent)); background: #fff; padding: 12px 16px; border-radius: 0 10px 10px 0; font-size: 18px; margin-top: 14px; }
+.warn { --c: var(--warn); }
+.ok { --c: var(--ok); }
+.n-big { font-family: 'Sora', 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 44px; line-height: 1; color: var(--c, var(--accent)); }
+.step-n { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--c, var(--accent)); color: #fff; font-family: 'Sora', 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 17px; margin-bottom: 8px; }
+code, .mono { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: .9em; }
+.logos { display: flex; gap: 36px; align-items: center; margin-top: auto; }
+.logos img { height: 52px; width: auto; }
+.logos img.cat { height: 40px; }
+
+/* maquetas de pantalla */
+.mock { width: 100%; background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,.08); font-size: 15px; }
+.mock .bar { background: #f0efec; padding: 8px 12px; font-size: 13px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.mock .bar::before { content: ''; width: 36px; height: 10px; background: radial-gradient(circle, #e0605a 4px, transparent 5px) 0 0/12px 10px repeat-x; }
+.mock .in { padding: 16px 18px; }
+.mock .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0efec; }
+.mock .btn { background: #111; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+.toggle { width: 38px; height: 22px; border-radius: 99px; background: #cfcdc8; position: relative; }
+.toggle::after { content: ''; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+.hl { outline: 3px solid var(--warn); outline-offset: 3px; border-radius: 6px; }
+
+/* barras */
+.bars { width: 100%; }
+.brow { display: grid; grid-template-columns: 190px 1fr 70px; gap: 12px; align-items: center; margin: 7px 0; font-size: 16px; }
+.btrack { height: 22px; background: #ecebe7; border-radius: 6px; overflow: hidden; }
+.bfill { height: 100%; background: var(--c, var(--accent)); border-radius: 6px; transition: width .5s; }
+.bval { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* calculadora */
+.calc select { font: inherit; font-size: 17px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #fff; width: 100%; }
+.calc label { font-size: 14px; font-weight: 600; color: var(--muted); display: block; margin: 0 0 4px; }
+.res { font-family: 'Sora', 'Inter', system-ui, sans-serif; font-size: 54px; font-weight: 800; color: var(--sub); line-height: 1; }
+
+/* predicción */
+.pred { font-size: 24px; margin-bottom: 14px; }
+.pred .blank { display: inline-block; min-width: 130px; border-bottom: 3px solid var(--accent); color: var(--accent); font-weight: 700; text-align: center; }
+.chip { display: inline-block; border: 1px solid var(--border); background: #fff; border-radius: 99px; padding: 6px 14px; font-size: 16px; cursor: pointer; margin: 4px 6px 4px 0; }
+.chip:hover { border-color: var(--accent); }
+
+/* flujo */
+.flow { display: flex; align-items: center; gap: 10px; width: 100%; }
+.flow .card { flex: 1; text-align: center; }
+.flow .arr { font-size: 30px; color: var(--muted); flex: 0 0 auto; }
+.flow .ico { font-size: 40px; display: block; margin-bottom: 6px; }
+
+table.t { border-collapse: collapse; width: 100%; font-size: 17px; background: #fff; border-radius: 10px; overflow: hidden; }
+table.t th, table.t td { padding: 9px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+table.t th { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: #faf9f7; }
+table.t td.n { white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* notas y controles */
+#notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 34vh; overflow: auto; background: #fffbea; border-top: 1px solid #e8dca0; padding: 14px 22px 18px; font-size: 16px; display: none; z-index: 5; }
+#notes b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--warn); margin-bottom: 4px; }
+body.notas #notes { display: block; }
+#ui { position: fixed; right: 14px; top: 12px; display: flex; gap: 6px; z-index: 6; }
+#ui button, #ui a { font: 600 13px 'Inter', sans-serif; background: rgba(19,33,58,.72); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 8px; padding: 6px 10px; cursor: pointer; text-decoration: none; }
+#ui button:hover, #ui a:hover { background: rgba(19,33,58,.9); }
+#prog { position: fixed; left: 0; top: 0; height: 4px; background: #6ea0ff; z-index: 6; transition: width .25s; }
+#nav { position: fixed; left: 14px; top: 12px; z-index: 6; color: #fff; background: rgba(19,33,58,.72); border-radius: 10px; padding: 3px; font: 600 13px 'Inter', sans-serif; display: flex; gap: 6px; align-items: center; }
+#nav button { font: 600 18px 'Inter', sans-serif; width: 34px; height: 30px; background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; cursor: pointer; }
+
+/* modo lectura: pantallas estrechas */
+body.lectura { overflow: auto; background: var(--bg); }
+body.lectura #stage { position: static; width: auto; height: auto; transform: none !important; }
+body.lectura .slide { position: relative; display: flex; inset: auto; padding: 34px 20px 46px; border-radius: 0; border-bottom: 8px solid #e8e7e3; overflow: visible; }
+body.lectura .slide h2 { font-size: 27px !important; margin-top: 0 !important; overflow-wrap: anywhere; } body.lectura .sep h2 { font-size: 32px !important; } body.lectura .sep .num { font-size: 64px !important; }
+body.lectura .slide .lead, body.lectura .sep .lead { font-size: 17px !important; }
+body.lectura .slide p, body.lectura .slide li { font-size: 16px; }
+body.lectura .body { flex-direction: column; align-items: stretch; gap: 20px; }
+body.lectura .cards { grid-template-columns: 1fr; }
+body.lectura .flow { flex-direction: column; } body.lectura .flow .arr { transform: rotate(90deg); }
+body.lectura .src, body.lectura .foot { position: static; margin-top: 12px; }
+body.lectura .brow { grid-template-columns: 110px 1fr 56px; font-size: 14px; }
+body.lectura .logos { flex-wrap: wrap; margin-top: 24px; }
+body.lectura table.t { font-size: 13px; } body.lectura table.t th, body.lectura table.t td { padding: 7px 6px; }
+body.lectura #ui, body.lectura #nav, body.lectura #prog { display: none; }
+body.lectura #notes { display: none; }
+body.lectura .nota-lectura { display: block; }
+.nota-lectura { display: none; font-size: 15px; background: #fffbea; border-left: 4px solid var(--warn); padding: 10px 12px; margin-top: 16px; color: #3d3a33; }
+.slide aside.notes { display: none; }
+
+@media print {
+  body { overflow: visible; background: #fff; }
+  #ui, #nav, #prog, #notes { display: none !important; }
+  #stage { position: static; transform: none !important; width: 1280px; height: auto; }
+  .slide { position: relative; display: flex !important; width: 1280px; height: 720px; page-break-after: always; border-radius: 0; }
+  @page { size: 1280px 720px; margin: 0; }
+}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="nav"><button id="prev" aria-label="Anterior">‹</button><span id="count"></span><button id="next" aria-label="Siguiente">›</button></div>
+<div id="ui">
+  <button id="bNotas" title="Notas (N)">Notas</button>
+  <button id="bFull" title="Pantalla completa (F)">Pantalla completa</button>
+  <a href="../">Portal del curso</a>
+</div>
+
+<main id="stage">
+
+<!-- 1 · Portada -->
+<section class="slide dark">
+  <div class="kicker" style="--c:#9cc0ff">Curso «IA para asociaciones de pacientes» · Sesión 1</div>
+  <h2 style="font-size:64px;max-width:1000px;margin-top:40px">Proveedores, modelos y vuestra clave de IA</h2>
+  <p class="lead" style="font-size:24px;max-width:900px">Qué hay detrás de un chat de IA, cuánto cuesta de verdad y cómo usarla con vuestra propia clave sin perder el control del gasto ni de los datos.</p>
+  <p style="font-size:18px;color:#c9d3e6">Fernando Borrás Rocher · Universidad Miguel Hernández de Elche</p>
+  <div class="logos"><img src="../assets/logo-propatiens.png" alt="Instituto ProPatiens"><img class="cat" src="../assets/logo-catedra-paciente.png" alt="Cátedra del Paciente, Universidad Miguel Hernández"></div>
+  <aside class="notes">Presentación de 2 horas: unos 70 minutos de explicación en cuatro actos y 40 minutos de práctica. Pasad con las flechas o deslizando; la tecla N abre estas notas y F, la pantalla completa.</aside>
+</section>
+
+<!-- 2 · Qué os lleváis -->
+<section class="slide">
+  <div class="kicker">Hoy</div>
+  <h2>Al acabar la sesión tendréis</h2>
+  <div class="body">
+    <div class="cards c3">
+      <div class="card"><span class="step-n">1</span><h3>Criterio</h3><p>Qué hay detrás de un chat de IA, quién fabrica los modelos y cómo se elige uno según la tarea, el coste y los datos.</p></div>
+      <div class="card" style="--c:var(--sub)"><span class="step-n">2</span><h3>Vuestra clave</h3><p>Una clave de API de OpenAI con saldo, <b>tope de gasto</b> y la recarga automática apagada.</p></div>
+      <div class="card" style="--c:var(--enc)"><span class="step-n">3</span><h3>El perfil de la asociación</h3><p>Un archivo JSON con vuestra misión, públicos, tono y marca, que usaréis en las cuatro sesiones siguientes.</p></div>
+    </div>
+  </div>
+  <div class="note-box"><b>Hoja de ruta:</b> Acto 1, la infraestructura detrás del chat · Acto 2, la economía del modelo · Acto 3, criterios de elección · Acto 4, de la infraestructura a la asociación · Práctica (40 min).</div>
+  <aside class="notes">Los puntos 2 y 3 son el entregable de la sesión. Si alguien no puede pagar con tarjeta hoy, puede hacer la práctica con el ejemplo de las apps (no necesita clave) y crear la clave antes de la sesión 2.</aside>
+</section>
+
+<!-- 3 · Acto 1 -->
+<section class="slide dark sep" style="--c:#6ea0ff">
+  <div class="num">1</div>
+  <h2>La infraestructura detrás del chat</h2>
+  <p class="lead">Qué es un modelo de lenguaje, quién los fabrica y por qué en este curso no usamos el chat, sino la API con vuestra clave.</p>
+</section>
+
+<!-- 4 · Prompt y respuesta -->
+<section class="slide">
+  <div class="kicker">Acto 1 · Lo básico</div>
+  <h2>Escribís un texto. El modelo devuelve otro.</h2>
+  <div class="body">
+    <div class="col narrow">
+      <p>Todo lo que hace la IA generativa empieza igual:</p>
+      <ul>
+        <li><b>Prompt</b> (entrada): lo que le pedís, con el material que le dais.</li>
+        <li><b>Respuesta</b> (salida): el texto que genera.</li>
+      </ul>
+      <div class="note-box">Ejemplo de asociación: <i>«Con estas notas de la junta, redacta un recordatorio breve de la asamblea del jueves para los socios»</i> → el recordatorio.</div>
+      <p style="margin-top:14px">La calidad de la respuesta depende mucho de la calidad del prompt y del material. Las apps del curso ya llevan los prompts escritos y probados.</p>
+    </div>
+    <figure class="fig"><img src="img/chat.webp" alt="Un chat: arriba la pregunta (prompt) y debajo la respuesta del modelo"><figcaption>Prompt arriba, respuesta debajo.</figcaption></figure>
+  </div>
+  <aside class="notes">Preguntad quién ha usado ya ChatGPT, Gemini o Claude y para qué. Casi siempre aparecen correos, resúmenes y traducciones: justo lo que veremos en las sesiones 2 y 3.</aside>
+</section>
+
+<!-- 5 · Siguiente palabra -->
+<section class="slide">
+  <div class="kicker">Acto 1 · Cómo funciona</div>
+  <h2>Un modelo de lenguaje predice la siguiente palabra</h2>
+  <div class="body">
+    <div class="col">
+      <p class="pred">«La próxima reunión de la junta será el <span class="blank" id="predOut">___</span>»</p>
+      <div class="bars" id="predBars"></div>
+      <p style="font-size:14px;color:var(--muted)">Probabilidades inventadas para ilustrar. Pulsad una palabra para completar la frase.</p>
+      <div class="note-box warn">No consulta una agenda ni una base de datos: elige la continuación <b>más probable</b>. Por eso escribe con soltura… y por eso puede inventar una fecha, una cifra o una cita. <b>Hay que revisar siempre.</b></div>
+    </div>
+    <figure class="fig" style="flex:.9"><img src="img/siguiente-palabra.webp" alt="Esquema: el modelo recibe el contexto y calcula la probabilidad de cada palabra siguiente"><figcaption>Repite este paso palabra a palabra hasta terminar la respuesta.</figcaption></figure>
+  </div>
+  <aside class="notes">Esta es la idea más importante del acto 1. Un modelo que «predice lo probable» puede producir algo plausible y falso. Por eso las apps del curso comprueban con código las citas y las cifras.</aside>
+</section>
+
+<!-- 6 · Quién fabrica -->
+<section class="slide">
+  <div class="kicker">Acto 1 · Proveedores</div>
+  <h2>Quién fabrica los modelos</h2>
+  <div class="body">
+    <figure class="fig"><img src="img/competidores.webp" alt="Logotipos de ChatGPT, Gemini, Claude, Grok, Mistral AI, DeepSeek, Z.ai, Qwen y Kimi, agrupados por país"></figure>
+    <div class="col narrow">
+      <ul>
+        <li><b>Estados Unidos:</b> OpenAI (ChatGPT), Google (Gemini), Anthropic (Claude), xAI (Grok).</li>
+        <li><b>Europa:</b> Mistral AI (Francia).</li>
+        <li><b>China:</b> DeepSeek, Alibaba (Qwen), Moonshot (Kimi), Z.ai.</li>
+      </ul>
+      <div class="note-box ok">Las apps del curso funcionan con <b>OpenAI, Google Gemini y Anthropic Claude</b>. En la práctica usaremos OpenAI.</div>
+    </div>
+  </div>
+  <aside class="notes">El país importa por la protección de datos: dónde se tratan y con qué garantías. Lo retomamos en el acto 3.</aside>
+</section>
+
+<!-- 7 · Nube o local -->
+<section class="slide">
+  <div class="kicker">Acto 1 · Dónde se ejecuta</div>
+  <h2>En la nube o en vuestro ordenador</h2>
+  <div class="body">
+    <div class="col">
+      <div class="cards c2">
+        <div class="card"><h3>Modelos cerrados, en la nube</h3><p>GPT, Gemini, Claude. Los más capaces. Se usan a través de internet y se paga por uso.</p></div>
+        <div class="card"><h3>Modelos abiertos, en local</h3><p>Llama, Mistral, Qwen, Gemma… con programas como Ollama. Los datos no salen del ordenador, pero hace falta un equipo potente.</p></div>
+      </div>
+      <div class="note-box">Para una asociación, lo práctico es la nube por API: sin comprar equipos, con modelos punteros y pagando céntimos. La privacidad se protege <b>anonimizando antes de enviar</b>.</div>
+    </div>
+    <figure class="fig" style="flex:.85"><img src="img/ia-local.webp" alt="Cartel de Ollama con modelos abiertos que se pueden ejecutar en local"><figcaption>Ollama ejecuta modelos abiertos en vuestro ordenador.</figcaption></figure>
+  </div>
+  <aside class="notes">Si alguien pregunta si su portátil puede: canirun.ai calcula qué modelos abiertos funcionan en un equipo concreto. Para un portátil normal, los modelos que caben son mucho menos capaces que los de la nube.</aside>
+</section>
+
+<!-- 8 · Suscripción o API -->
+<section class="slide">
+  <div class="kicker">Acto 1 · Dos formas de pagar</div>
+  <h2>Suscripción o clave de API</h2>
+  <div class="body">
+    <div class="cards c2">
+      <div class="card"><span class="tag">Suscripción</span><div class="n-big" style="margin:14px 0 8px">≈ 20 € / mes</div><p>La app de chat (ChatGPT Plus, Gemini, Claude Pro). Cuota fija, con límites de uso. Cómoda para conversar, pero cada tarea se hace a mano, copiando y pegando.</p></div>
+      <div class="card" style="--accent:var(--sub);border-color:#bfe0d2"><span class="tag" style="background:#e5f4ee;color:var(--sub)">Clave de API</span><div class="n-big" style="--c:var(--sub);margin:14px 0 8px">Pago por uso</div><p>Se paga por la cantidad de texto procesado. La clave conecta el modelo con apps como las del curso, que hacen el trabajo por pasos y lo comprueban.</p></div>
+    </div>
+  </div>
+  <div class="note-box warn"><b>Son productos distintos</b>, con facturación separada: tener ChatGPT Plus no da acceso a la API, ni al revés.</div>
+  <aside class="notes">Pasar a acta las notas de una reunión cuesta del orden de una décima de céntimo con un modelo pequeño (lo calculamos en el acto 2). Con 5 $ de saldo hay de sobra para todo el curso.</aside>
+</section>
+
+<!-- 9 · Qué es una API -->
+<section class="slide">
+  <div class="kicker">Acto 1 · La API</div>
+  <h2>Qué es una API y por qué la usan las apps del curso</h2>
+  <p class="lead">Una API es la puerta por la que un programa habla directamente con el modelo, sin pasar por la web del chat. La clave identifica quién paga.</p>
+  <div class="body">
+    <div class="flow">
+      <div class="card"><span class="ico">💻</span><h3>Vuestro navegador</h3><p>La app del curso (un solo archivo) y vuestra clave, guardada solo ahí.</p></div>
+      <div class="arr">→</div>
+      <div class="card"><span class="ico">☁️</span><h3>El proveedor</h3><p>OpenAI, Google o Anthropic recibe la petición y cobra los tokens a vuestra cuenta.</p></div>
+      <div class="arr">→</div>
+      <div class="card"><span class="ico">✅</span><h3>La respuesta</h3><p>Vuelve a la app, que comprueba las citas y las cifras antes de enseñárosla.</p></div>
+    </div>
+  </div>
+  <div class="note-box ok">No hay ningún servidor del curso en medio: nadie más ve vuestros documentos ni vuestra clave.</div>
+  <aside class="notes">Esta es la razón de pedir clave propia: privacidad (los datos van directamente al proveedor), control del gasto (el tope lo ponéis vosotros) y continuidad (las apps siguen funcionando cuando acabe el curso).</aside>
+</section>
+
+<!-- 10 · Acto 2 -->
+<section class="slide dark sep" style="--c:#f59e0b">
+  <div class="num">2</div>
+  <h2>La economía del modelo</h2>
+  <p class="lead">Tokens, precio por millón, modelos grandes y pequeños, y cuánto cuesta de verdad redactar un acta o analizar una encuesta.</p>
+</section>
+
+<!-- 11 · Tokens -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Acto 2 · La unidad de medida</div>
+  <h2>El modelo no lee palabras: lee tokens</h2>
+  <div class="body">
+    <div class="col narrow">
+      <p>El texto se trocea en fragmentos llamados <b>tokens</b>: palabras cortas enteras y trozos de las largas.</p>
+      <p style="margin:14px 0 8px">Ejemplo ilustrativo:</p>
+      <p class="mono" style="font-size:19px;line-height:2">
+        <span class="tag">La</span> <span class="tag">asoci</span><span class="tag">ación</span> <span class="tag">organ</span><span class="tag">iza</span> <span class="tag">un</span> <span class="tag">taller</span>
+      </p>
+      <div class="note-box">Regla práctica: en castellano, <b>1 palabra ≈ 1,3 tokens</b>. Una página (unas 400 palabras) son unos 500 tokens.</div>
+    </div>
+    <figure class="fig"><img src="img/tokens.webp" alt="Esquema: texto, troceado en tokens, convertido en números y en vectores"><figcaption>Texto → tokens → números: así lo procesa el modelo.</figcaption></figure>
+  </div>
+  <aside class="notes">El troceo exacto depende de cada modelo; la regla de 1,3 tokens por palabra basta para estimar costes. Todo se mide y se cobra en tokens: lo que enviáis y lo que recibís.</aside>
+</section>
+
+<!-- 12 · Entrada y salida -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Acto 2 · Qué se paga</div>
+  <h2>Se paga lo que enviáis y lo que recibís</h2>
+  <div class="body">
+    <figure class="fig"><img src="img/entrada-salida.webp" alt="Comparación de tokens de entrada, procesados en paralelo, y tokens de salida, generados uno a uno"></figure>
+    <div class="col narrow">
+      <ul>
+        <li><b>Entrada:</b> las instrucciones y vuestros documentos. Se procesa de golpe.</li>
+        <li><b>Salida:</b> la respuesta. Se genera token a token, y por eso cuesta <b>unas 5 veces más</b>.</li>
+      </ul>
+      <div class="note-box ok">Consecuencia práctica: enviad solo el material que hace falta y pedid respuestas concretas. Las apps del curso ya lo hacen así.</div>
+    </div>
+  </div>
+  <aside class="notes">En las tarifas de OpenAI de finales de 2026, la salida cuesta 5 veces la entrada en todos los modelos de la familia GPT-6.</aside>
+</section>
+
+<!-- 13 · Precios -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Acto 2 · Grandes y pequeños</div>
+  <h2>De un modelo a otro, el precio cambia 100 veces</h2>
+  <div class="body">
+    <div class="col">
+      <table class="t">
+        <tr><th>Modelo de OpenAI</th><th>En una asociación</th><th style="text-align:right">Entrada</th><th style="text-align:right">Salida</th></tr>
+        <tr><td><b>GPT-6 Luna</b></td><td>Tareas acotadas: resumir, clasificar, redactar avisos</td><td class="n">0,10 $</td><td class="n">0,50 $</td></tr>
+        <tr><td><b>GPT-6.1 Terra</b></td><td>Trabajo de oficina: actas, campañas, informes</td><td class="n">1 $</td><td class="n">5 $</td></tr>
+        <tr><td><b>GPT-6.1 Sol</b></td><td>Trabajo profesional exigente: mejorar un proyecto</td><td class="n">2 $</td><td class="n">10 $</td></tr>
+        <tr><td><b>GPT-6 Astra</b></td><td>El razonamiento más exigente; rara vez hace falta</td><td class="n">10 $</td><td class="n">50 $</td></tr>
+      </table>
+      <p style="font-size:15px;color:var(--muted);margin-top:8px">Dólares por millón de tokens. Un millón de tokens son unas 2.000 páginas.</p>
+      <div class="note-box">Para redactar, resumir y clasificar, un modelo pequeño suele bastar. Empezad por el económico y subid solo si el resultado no convence.</div>
+    </div>
+    <figure class="fig" style="flex:.9"><img src="img/modelos-2026.webp" alt="Los cuatro modelos de ChatGPT en 2026, de menor a mayor capacidad: Luna, Terra, Sol y Astra"></figure>
+  </div>
+  <div class="src">Tarifas estándar de la API de OpenAI, noviembre de 2026. Cambian a menudo: consultad la página de precios del proveedor.</div>
+  <aside class="notes">Las tarifas bajan con frecuencia: GPT-6 Sol y Luna salieron en septiembre de 2026 a la mitad de precio que sus predecesores. Lo que se mantiene es el orden de magnitud: los modelos pequeños cuestan céntimos.</aside>
+</section>
+
+<!-- 14 · Calculadora -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Acto 2 · En la práctica</div>
+  <h2>¿Cuánto cuesta una tarea de la asociación?</h2>
+  <div class="body calc">
+    <div class="col narrow">
+      <label for="cTarea">Tarea</label>
+      <select id="cTarea"></select>
+      <label for="cModelo" style="margin-top:14px">Modelo</label>
+      <select id="cModelo"></select>
+      <p id="cSupuesto" style="font-size:15px;color:var(--muted);margin-top:14px"></p>
+    </div>
+    <div class="col" style="text-align:center">
+      <div class="res" id="cRes">—</div>
+      <p style="color:var(--muted);margin-top:6px" id="cRes2"></p>
+      <div class="note-box ok" style="text-align:left;margin-top:22px" id="cCinco"></div>
+    </div>
+  </div>
+  <div class="src">Estimación con 1 palabra ≈ 1,3 tokens y las tarifas de la diapositiva anterior. El coste real puede variar algo.</div>
+  <aside class="notes">Probad el proyecto de subvención con GPT-6 Astra: incluso el caso más caro cuesta unos pocos dólares. Con el modelo pequeño, todo el curso cabe en unos céntimos.</aside>
+</section>
+
+<!-- 15 · Gasto real -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Acto 2 · Gasto real</div>
+  <h2>Una sesión entera de prácticas: 3 céntimos</h2>
+  <div class="body">
+    <figure class="fig"><img src="img/gasto-real.webp" alt="Panel Usage de la plataforma de OpenAI con un gasto total de 0,03 dólares"><figcaption>Panel <b>Usage</b> de platform.openai.com tras una sesión de práctica.</figcaption></figure>
+    <div class="col narrow">
+      <p>El panel <b>Usage</b> muestra lo gastado cada día. Miradlo después de cada sesión del curso: es la mejor manera de perderle el miedo al coste.</p>
+      <div class="note-box warn">Lo que sí puede disparar el gasto es una app funcionando en bucle o una clave filtrada. Para eso está el <b>tope de gasto</b>, que pondremos en la práctica.</div>
+    </div>
+  </div>
+  <aside class="notes">Captura real de una práctica con una app de simulación: 3 céntimos de dólar en total.</aside>
+</section>
+
+<!-- 16 · Acto 3 -->
+<section class="slide dark sep" style="--c:#34d399">
+  <div class="num">3</div>
+  <h2>Criterios de elección</h2>
+  <p class="lead">Capacidad, coste, ventana de contexto, privacidad y uso ético: cinco preguntas antes de elegir un modelo para una tarea.</p>
+</section>
+
+<!-- 17 · Capacidad: MIR -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--sub)">Acto 3 · Capacidad</div>
+  <h2>La IA y el examen MIR: del 51 % al 97 % en tres años</h2>
+  <div class="body">
+    <div class="col">
+      <div class="bars">
+        <div class="brow"><span><b>2023</b> · ChatGPT-3.5</span><div class="btrack"><div class="bfill" style="width:51.4%;--c:#94a3b8"></div></div><span class="bval">51,4 %</span></div>
+        <div class="brow"><span><b>2025</b> · o1 Pro</span><div class="btrack"><div class="bfill" style="width:91.7%;--c:#60a5fa"></div></div><span class="bval">91,7 %</span></div>
+        <div class="brow"><span><b>2026</b> · GPT-5.2</span><div class="btrack"><div class="bfill" style="width:97.1%;--c:var(--sub)"></div></div><span class="bval">97,1 %</span></div>
+      </div>
+      <p style="font-size:15px;color:var(--muted);margin-top:6px">Aciertos en el examen MIR de cada año (en 2026, con imágenes). Mejor modelo evaluado.</p>
+    </div>
+    <div class="col narrow">
+      <div class="note-box">Los modelos actuales razonan y redactan muy bien, también sobre temas de salud.</div>
+      <div class="note-box warn">Pero ni el 97 % es el 100 %. En una asociación de pacientes, la IA <b>no da consejo clínico</b>: redacta, resume y organiza, y una persona revisa.</div>
+    </div>
+  </div>
+  <div class="src">Exámenes y condiciones no equivalentes: tendencia, no comparación directa. Carrasco et al., Rev Esp Educ Med 2023;1:55-69, doi:10.6018/edumed.556511 · MIR 2025 y 2026: comparativas publicadas de modelos.</div>
+  <aside class="notes">En 2023 ChatGPT-3.5 habría superado la nota de corte (≈ 69 netas). En 2026 el mejor de ocho modelos acertó el 97,1 %, incluidas las preguntas con imagen.</aside>
+</section>
+
+<!-- 18 · Inteligencia y coste -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--sub)">Acto 3 · Capacidad frente a coste</div>
+  <h2>No hace falta el modelo más caro</h2>
+  <div class="body">
+    <figure class="fig"><img src="img/frontera.webp" alt="Gráfico de inteligencia frente a coste por tarea de muchos modelos; la zona sombreada marca los más atractivos"><figcaption>Cada punto es un modelo: arriba, más capaz; a la derecha, más caro.</figcaption></figure>
+    <div class="col narrow">
+      <p>Los modelos de la <b>zona sombreada</b> dan casi la misma calidad que los mejores por una fracción del precio.</p>
+      <div class="note-box ok"><b>Regla del curso:</b> modelo económico por defecto; uno potente solo para lo difícil (por ejemplo, mejorar un proyecto de subvención).</div>
+    </div>
+  </div>
+  <div class="src">Fuente: Artificial Analysis, índice de inteligencia frente a coste por tarea.</div>
+  <aside class="notes">Las apps del curso cargan la lista de modelos que permite vuestra clave y recomiendan uno económico. Se puede cambiar en cualquier momento.</aside>
+</section>
+
+<!-- 19 · Ventana de contexto -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--sub)">Acto 3 · Memoria de trabajo</div>
+  <h2>La ventana de contexto: cuánto texto cabe en una petición</h2>
+  <div class="body">
+    <div class="col">
+      <div class="cards c3">
+        <div class="card"><div class="n-big">1.000</div><p>tokens ≈ 750 palabras ≈ <b>2 o 3 páginas</b></p></div>
+        <div class="card"><div class="n-big">128.000</div><p>tokens ≈ <b>250 páginas</b>: una memoria anual completa</p></div>
+        <div class="card"><div class="n-big" style="--c:var(--sub)">1.050.000</div><p>tokens en GPT-6 ≈ <b>más de 2.000 páginas</b></p></div>
+      </div>
+      <div class="note-box">Hoy cabe casi cualquier documento de una asociación: actas, bases de una convocatoria, el proyecto entero, todas las respuestas de una encuesta.</div>
+      <div class="note-box warn">Pero cada token enviado se paga y, con mucho texto irrelevante, el modelo atiende peor. <b>Mejor poco y pertinente que todo.</b></div>
+    </div>
+  </div>
+  <aside class="notes">Cuenta: 1 token ≈ 0,75 palabras en inglés; en castellano algo menos. Con unas 400 palabras por página, 1.000 tokens son 2 o 3 páginas.</aside>
+</section>
+
+<!-- 20 · Privacidad -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--sub)">Acto 3 · Privacidad</div>
+  <h2>Datos de salud: categoría especial</h2>
+  <div class="body">
+    <div class="col">
+      <ul>
+        <li>El RGPD (art. 9) protege especialmente los datos de salud. Una asociación de pacientes los maneja a diario.</li>
+        <li>Por API, los datos <b>no se usan para entrenar los modelos</b> por defecto. Aun así, salen de vuestro ordenador.</li>
+        <li><b>Nunca</b> enviéis historias clínicas, listados de socios ni datos de salud que identifiquen a alguien.</li>
+      </ul>
+    </div>
+    <div class="col narrow">
+      <div class="card"><h3>Lo que hacen las apps del curso</h3><p style="margin-top:6px">✓ Enmascaran correos, DNI/NIE, teléfonos e IBAN antes de enviar.<br>✓ Avisan de posibles nombres propios.<br>✓ Os enseñan lo que va a salir antes del primer envío.<br>✓ En encuestas, ocultan grupos de menos de 5 personas.</p></div>
+    </div>
+  </div>
+  <div class="note-box warn">La herramienta ayuda, pero la responsabilidad es vuestra: <b>anonimizad antes de subir</b>.</div>
+  <aside class="notes">Para el curso se pide documentación anonimizada: actas sin nombres de socios, encuestas sin datos identificativos.</aside>
+</section>
+
+<!-- 21 · Uso ético -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--sub)">Acto 3 · Uso ético</div>
+  <h2>Cuatro normas de uso</h2>
+  <div class="body">
+    <div class="cards c4">
+      <div class="card"><span class="step-n">1</span><h3>Revisad</h3><p>Todo lo que genera la IA pasa por una persona antes de publicarse o enviarse.</p></div>
+      <div class="card"><span class="step-n">2</span><h3>Declarad</h3><p>Decid cuándo un texto se ha preparado con ayuda de IA, sobre todo hacia fuera.</p></div>
+      <div class="card"><span class="step-n">3</span><h3>Proteged</h3><p>Anonimizad. Pensad dónde van los datos y quién podría verlos.</p></div>
+      <div class="card"><span class="step-n">4</span><h3>Con prudencia</h3><p>Sin recomendaciones clínicas. Ante la duda, a un profesional sanitario.</p></div>
+    </div>
+  </div>
+  <aside class="notes">Estas cuatro normas están también en el portal del curso y se aplican en todas las sesiones.</aside>
+</section>
+
+<!-- 22 · Acto 4 -->
+<section class="slide dark sep" style="--c:#c084fc">
+  <div class="num">4</div>
+  <h2>De la infraestructura a la asociación</h2>
+  <p class="lead">Apps de un solo archivo que usan vuestra clave: las cuatro del curso y el perfil que las conecta.</p>
+</section>
+
+<!-- 23 · Apps de un solo archivo -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--enc)">Acto 4 · La idea</div>
+  <h2>Apps de un solo archivo, con vuestra clave</h2>
+  <div class="body">
+    <div class="col narrow">
+      <ul>
+        <li>Una página web que se abre en el navegador. Sin instalar nada y sin servidor.</li>
+        <li>Llevan dentro los prompts, los pasos y las comprobaciones. Solo hay que poner la clave.</li>
+        <li><b>La IA propone, el código comprueba:</b> las cifras las calcula el código, y las citas se verifican palabra por palabra.</li>
+      </ul>
+      <div class="note-box">Todas traen un <b>ejemplo sin clave</b> para ver qué hacen antes de usar vuestros documentos.</div>
+    </div>
+    <figure class="fig"><img src="img/catalogo.webp" alt="Portada del catálogo Herramientas IA para la academia de la UMH: 176 herramientas, 5 categorías, 100 % en el navegador"><figcaption>El mismo modelo ya funciona en la Universidad Miguel Hernández: <a href="https://fborrasumh.github.io/ia/" target="_blank" rel="noopener">fborrasumh.github.io/ia</a></figcaption></figure>
+  </div>
+  <aside class="notes">El catálogo de la UMH reúne más de 170 herramientas para docencia e investigación con esta misma arquitectura. Las de este curso están pensadas para asociaciones.</aside>
+</section>
+
+<!-- 24 · Las cuatro apps -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--enc)">Acto 4 · El curso</div>
+  <h2>Cuatro apps, cuatro sesiones, cuatro entregables</h2>
+  <div class="body">
+    <div class="cards c4" style="align-items:start">
+      <a class="card" style="text-decoration:none;color:inherit;border-top:4px solid var(--int)" href="https://fborrasumh.github.io/juntia/" target="_blank" rel="noopener"><div class="kicker" style="--c:var(--int)">Sesión 2</div><h3>JuntIA</h3><p>Comunicación interna: de las notas al acta, con acuerdos, responsables y plazos.</p><p style="margin-top:10px;font-size:14px;color:var(--muted)">Se presenta en la sesión 2.</p></a>
+      <a class="card" style="text-decoration:none;color:inherit;border-top:4px solid var(--ext)" href="https://fborrasumh.github.io/difundia/" target="_blank" rel="noopener"><div class="kicker" style="--c:var(--ext)">Sesión 3</div><h3>DifundIA</h3><img src="img/app-difundia.webp" alt="DifundIA: textos e imágenes listos para publicar" style="width:100%;border-radius:8px;margin:8px 0;border:1px solid var(--border)"><p>Comunicación externa: redes, boletín, nota de prensa e imágenes con vuestra marca.</p></a>
+      <a class="card" style="text-decoration:none;color:inherit;border-top:4px solid var(--sub)" href="https://fborrasumh.github.io/subvencia/" target="_blank" rel="noopener"><div class="kicker" style="--c:var(--sub)">Sesión 4</div><h3>SubvencIA</h3><img src="img/app-subvencia.webp" alt="SubvencIA: la puntuación del proyecto sube ciclo a ciclo" style="width:100%;border-radius:8px;margin:8px 0;border:1px solid var(--border)"><p>Proyectos: puntúa vuestro proyecto con la rúbrica de la convocatoria y lo mejora sección a sección.</p></a>
+      <a class="card" style="text-decoration:none;color:inherit;border-top:4px solid var(--enc)" href="https://fborrasumh.github.io/encuestia/" target="_blank" rel="noopener"><div class="kicker" style="--c:var(--enc)">Sesión 5</div><h3>EncuestIA</h3><img src="img/app-encuestia.webp" alt="EncuestIA: gráfico de antes y después calculado por código" style="width:100%;border-radius:8px;margin:8px 0;border:1px solid var(--border)"><p>Encuestas: informe Word con tablas y gráficos calculados por código.</p></a>
+    </div>
+  </div>
+  <aside class="notes">Enseñad una app en directo con su ejemplo sin clave; por ejemplo, EncuestIA: en un minuto se ve el informe completo.</aside>
+</section>
+
+<!-- 25 · El perfil -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--enc)">Acto 4 · El hilo conductor</div>
+  <h2>El perfil de la asociación viaja de una app a otra</h2>
+  <div class="body">
+    <div class="col">
+      <div class="flow">
+        <div class="card"><span class="ico">✍️</span><h3>Se rellena</h3><p>En cualquiera de las apps, una sola vez.</p></div>
+        <div class="arr">→</div>
+        <div class="card"><span class="ico">💾</span><h3>Se descarga</h3><p><code>perfil-asociacion.json</code>, un archivo pequeño.</p></div>
+        <div class="arr">→</div>
+        <div class="card"><span class="ico">📂</span><h3>Se sube</h3><p>En la app siguiente, y ya conoce a la asociación.</p></div>
+      </div>
+      <div class="note-box" style="margin-top:22px"><b>Qué guarda:</b> nombre, ámbito y territorio, misión, públicos, tono, redes y etiquetas, palabras que evitar, fuentes y fechas clave. Y el <b>kit de marca</b>: colores, eslogan y logo.</div>
+      <div class="note-box ok">El kit de marca nunca se envía a la IA: lo usa el código para maquetar.</div>
+    </div>
+  </div>
+  <aside class="notes">El perfil es el segundo entregable de hoy. Guardadlo en la carpeta compartida de la asociación para que cualquiera del equipo pueda usarlo.</aside>
+</section>
+
+<!-- 26 · Práctica -->
+<section class="slide dark sep" style="--c:#fbbf24">
+  <div class="num" style="font-size:90px">40 min</div>
+  <h2>Práctica: vuestra clave y vuestro perfil</h2>
+  <p class="lead">Seis pasos. Hacedlo sentados, con la tarjeta y el móvil a mano: OpenAI pide verificar un número de teléfono.</p>
+  <div><span class="pill">1 · Cuenta</span><span class="pill">2 · Saldo</span><span class="pill">3 · Tope</span><span class="pill">4 · Clave</span><span class="pill">5 · Probar</span><span class="pill">6 · Perfil</span></div>
+</section>
+
+<!-- 27 · Seis reglas -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Antes de empezar</div>
+  <h2>Vuestra clave: seis reglas</h2>
+  <div class="body">
+    <div class="cards c3">
+      <div class="card"><span class="step-n" style="--c:var(--bad)">1</span><h3>Es una tarjeta de crédito</h3><p>Nunca en un correo, un chat, una diapositiva ni un documento compartido.</p></div>
+      <div class="card"><span class="step-n">2</span><h3>Con tope de gasto</h3><p>Presupuesto mensual bajo y aviso por correo antes de llegar.</p></div>
+      <div class="card"><span class="step-n">3</span><h3>Sin recarga automática</h3><p>Es la forma más común de gastar de más sin enteraros.</p></div>
+      <div class="card"><span class="step-n">4</span><h3>Una clave con nombre</h3><p>Por ejemplo, <code>curso-propatiens</code>. Si se filtra, se revoca sin afectar a nada más.</p></div>
+      <div class="card"><span class="step-n">5</span><h3>Modelo según la tarea</h3><p>Económico por defecto; potente solo cuando haga falta.</p></div>
+      <div class="card"><span class="step-n">6</span><h3>Si se ve, revocadla</h3><p>Borrarla y crear otra es gratis y se hace en diez segundos.</p></div>
+    </div>
+  </div>
+  <aside class="notes">Regla 1, con un ejemplo real: una clave pegada en una diapositiva la puede usar cualquiera que vea la presentación. Si os pasa, revocadla en el momento.</aside>
+</section>
+
+<!-- 28 · Pasos 1 y 2 -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Práctica · Pasos 1 y 2 · unos 7 min</div>
+  <h2>Cuenta en la plataforma y 5 $ de saldo</h2>
+  <div class="body">
+    <div class="col">
+      <p><span class="step-n">1</span> Entrad en <b>platform.openai.com</b> (la plataforma de desarrollo, <b>no</b> ChatGPT). Si ya usáis ChatGPT, entrad con la misma cuenta. Verificad el correo y el móvil.</p>
+      <p style="margin-top:16px"><span class="step-n">2</span> <b>Settings → Billing</b> → <i>Add payment method</i>. Añadid el mínimo, <b>5 $</b>. Sin saldo, la clave existe pero no responde.</p>
+      <div class="note-box warn">Dejad <b>Auto recharge</b> desactivado.</div>
+    </div>
+    <div class="col narrow">
+      <div class="mock"><div class="bar">platform.openai.com/settings/organization/billing</div>
+        <div class="in">
+          <div class="row"><span>Credit balance</span><b>$5.00</b></div>
+          <div class="row"><span>Add payment method</span><span class="btn">Add</span></div>
+          <div class="row"><span>Auto recharge</span><span class="toggle hl"></span></div>
+          <p style="font-size:13px;color:var(--muted);margin-top:8px">Esquema de la pantalla: la real puede cambiar en detalles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Con 5 $ sobra para todo el curso: el saldo no caduca al terminar. Sirven tarjetas personales, de prepago o monederos virtuales.</aside>
+</section>
+
+<!-- 29 · Pasos 3 y 4 -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Práctica · Pasos 3 y 4 · unos 5 min</div>
+  <h2>Tope de gasto y la clave</h2>
+  <div class="body">
+    <div class="col">
+      <p><span class="step-n">3</span> En <b>Limits</b>: presupuesto mensual de <b>5 $</b> y aviso por correo al llegar a <b>4 $</b>.</p>
+      <p style="margin-top:16px"><span class="step-n">4</span> En <b>platform.openai.com/api-keys</b> → <i>Create new secret key</i>. Nombre: <code>curso-propatiens</code>.</p>
+      <div class="note-box warn">La clave empieza por <code>sk-proj-</code> y <b>se muestra una sola vez</b>. Copiadla en ese momento y guardadla en el gestor de contraseñas del navegador.</div>
+    </div>
+    <div class="col narrow">
+      <div class="mock"><div class="bar">platform.openai.com/api-keys</div>
+        <div class="in">
+          <p style="font-weight:600;margin-bottom:8px;font-size:15px">Save your key</p>
+          <div class="row"><span class="mono">sk-proj-••••••••••••••••••</span><span class="btn">Copy</span></div>
+          <p style="font-size:13px;color:var(--bad);margin-top:8px">No volveréis a ver esta clave.</p>
+          <p style="font-size:13px;color:var(--muted);margin-top:4px">Esquema de la pantalla.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Si alguien pierde la clave, no pasa nada: se borra y se crea otra. No se puede recuperar.</aside>
+</section>
+
+<!-- 30 · Paso 5 -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Práctica · Paso 5 · unos 5 min</div>
+  <h2>Pegadla en una app y elegid modelo</h2>
+  <div class="body">
+    <div class="col">
+      <ol style="padding-left:1.2em">
+        <li>Abrid <a href="https://fborrasumh.github.io/encuestia/" target="_blank" rel="noopener">EncuestIA</a> (o cualquier app del curso) y pulsad <b>IA</b> en la barra de arriba.</li>
+        <li>Elegid <b>OpenAI</b> y pegad la clave. Cuidado con los espacios al principio o al final.</li>
+        <li>Cargad la <b>lista de modelos</b> de vuestra clave y elegid uno económico, por ejemplo <b>GPT-6 Luna</b>.</li>
+        <li>Lanzad una prueba corta. Si responde, ya está.</li>
+      </ol>
+      <div class="note-box ok">La clave se guarda solo en vuestro navegador. En otro ordenador habrá que pegarla de nuevo.</div>
+    </div>
+  </div>
+  <aside class="notes">Si la app dice «insufficient_quota», falta saldo (paso 2). Si dice «incorrect API key», casi siempre es un espacio pegado al copiar.</aside>
+</section>
+
+<!-- 31 · Paso 6 -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Práctica · Paso 6 · unos 20 min</div>
+  <h2>Rellenad y descargad el perfil de la asociación</h2>
+  <div class="body">
+    <div class="col">
+      <ol style="padding-left:1.2em">
+        <li>En la app, abrid la tarjeta <b>Perfil de la asociación</b>.</li>
+        <li>Rellenad nombre, ámbito, territorio, misión, públicos y tono. Añadid redes, etiquetas, palabras que evitar y fechas clave.</li>
+        <li>Si queréis, el <b>kit de marca</b>: dos colores, un eslogan y el logo.</li>
+        <li><b>Descargad el perfil (.json)</b> y guardadlo en la carpeta compartida de la asociación.</li>
+      </ol>
+    </div>
+    <div class="col narrow">
+      <div class="note-box">Trabajad por asociación, en las salas de 4 o 5 personas: el perfil se discute mejor en equipo.</div>
+      <div class="note-box ok"><b>Entregable de hoy:</b> clave con tope de gasto + <code>perfil-asociacion.json</code>.</div>
+    </div>
+  </div>
+  <aside class="notes">El tono y las palabras que evitar son lo que más mejora los textos de la sesión 3. Merece la pena dedicarles tiempo.</aside>
+</section>
+
+<!-- 32 · Si algo se atasca -->
+<section class="slide">
+  <div class="kicker" style="--c:var(--warn)">Práctica</div>
+  <h2>Si algo se atasca</h2>
+  <div class="body">
+    <div class="cards c3">
+      <div class="card"><h3>He perdido la clave</h3><p>No se recupera. En api-keys, borrad la antigua y cread otra.</p></div>
+      <div class="card"><h3><code>insufficient_quota</code></h3><p>La clave es correcta, pero no hay saldo. Volved al paso 2.</p></div>
+      <div class="card"><h3><code>incorrect API key</code></h3><p>Casi siempre, un espacio al copiar. Borrad el campo y pegad de nuevo.</p></div>
+      <div class="card"><h3>Tengo ChatGPT Plus</h3><p>No sirve: la suscripción no incluye la API. Hay que cargar saldo igualmente.</p></div>
+      <div class="card"><h3>No puedo pagar con la tarjeta de la asociación</h3><p>Sirve una tarjeta personal, de prepago o un monedero virtual.</p></div>
+      <div class="card"><h3>No tengo clave todavía</h3><p>Usad el ejemplo sin clave de cada app y cread la clave antes de la sesión 2.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 33 · Para la sesión 2 -->
+<section class="slide">
+  <div class="kicker">Para las próximas sesiones</div>
+  <h2>Qué documentación traer (anonimizada)</h2>
+  <div class="body">
+    <div class="cards c4">
+      <div class="card" style="border-top:4px solid var(--int)"><div class="kicker" style="--c:var(--int)">Sesión 2 · JuntIA</div><p>Notas o actas de dos reuniones.</p></div>
+      <div class="card" style="border-top:4px solid var(--ext)"><div class="kicker" style="--c:var(--ext)">Sesión 3 · DifundIA</div><p>Un comunicado o publicación reciente, y un boletín anterior si lo tenéis.</p></div>
+      <div class="card" style="border-top:4px solid var(--sub)"><div class="kicker" style="--c:var(--sub)">Sesión 4 · SubvencIA</div><p>Una convocatoria de financiación abierta y el esquema de un proyecto.</p></div>
+      <div class="card" style="border-top:4px solid var(--enc)"><div class="kicker" style="--c:var(--enc)">Sesión 5 · EncuestIA</div><p>Una encuesta propia en Excel o CSV, sin datos identificativos.</p></div>
+    </div>
+  </div>
+  <div class="note-box warn">Sin nombres de socios ni datos de salud que identifiquen a nadie. Y traed el <code>perfil-asociacion.json</code> a todas las sesiones.</div>
+</section>
+
+<!-- 34 · Cierre -->
+<section class="slide dark">
+  <div class="kicker" style="--c:#9cc0ff">Para recordar</div>
+  <h2 style="font-size:54px;margin-top:30px;max-width:1050px">La IA propone, el código comprueba y vosotros decidís.</h2>
+  <ul style="margin-top:20px;color:#dbe3f2">
+    <li>Un modelo predice lo probable: revisad siempre.</li>
+    <li>Por API se paga por uso: céntimos con un modelo económico y un tope de gasto.</li>
+    <li>Datos de salud: anonimizad antes de enviar.</li>
+  </ul>
+  <p style="margin-top:22px;font-size:19px;color:#c9d3e6">Portal del curso, apps y normas: <a href="../" style="color:#9cc0ff">fborrasumh.github.io/propatiens</a></p>
+  <div class="logos"><img src="../assets/logo-propatiens.png" alt="Instituto ProPatiens"><img class="cat" src="../assets/logo-catedra-paciente.png" alt="Cátedra del Paciente, Universidad Miguel Hernández"></div>
+</section>
+
+</main>
+<div id="notes"><b>Notas</b><span id="notesTxt"></span></div>
+
+<script>
+(() => {
+  'use strict';
+  const S = [...document.querySelectorAll('.slide')];
+  const stage = document.getElementById('stage');
+  let i = 0;
+
+  /* pie con número y notas también visibles en modo lectura */
+  S.forEach((s, k) => {
+    const f = document.createElement('div'); f.className = 'foot'; f.textContent = `${k + 1} / ${S.length}`; s.appendChild(f);
+    const n = s.querySelector('aside.notes');
+    if (n) { const d = document.createElement('div'); d.className = 'nota-lectura'; d.textContent = n.textContent; s.appendChild(d); }
+  });
+
+  const lectura = () => window.innerWidth < 820 || (window.innerHeight < 430 && window.innerWidth < 1000);
+  function fit() {
+    document.body.classList.toggle('lectura', lectura());
+    if (lectura()) return;
+    const sc = Math.min(window.innerWidth / 1280, (window.innerHeight - 8) / 720);
+    stage.style.transform = `translate(-50%, -50%) scale(${sc})`;
+  }
+  function go(n) {
+    i = Math.max(0, Math.min(S.length - 1, n));
+    S.forEach((s, k) => s.classList.toggle('on', k === i));
+    document.getElementById('count').textContent = `${i + 1} / ${S.length}`;
+    document.getElementById('prog').style.width = `${(i + 1) / S.length * 100}%`;
+    const nt = S[i].querySelector('aside.notes');
+    document.getElementById('notesTxt').textContent = nt ? nt.textContent : 'Sin notas en esta diapositiva.';
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  }
+  const notas = () => document.body.classList.toggle('notas');
+  const full = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.(); };
+
+  document.addEventListener('keydown', e => {
+    if (e.target.closest('select, input, textarea') || lectura()) return;
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); go(i + 1); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); go(i - 1); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(S.length - 1);
+    else if (e.key.toLowerCase() === 'n') notas();
+    else if (e.key.toLowerCase() === 'f') full();
+  });
+  let x0 = null;
+  document.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive: true});
+  document.addEventListener('touchend', e => {
+    if (x0 === null || lectura()) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
+  });
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.getElementById('bNotas').onclick = notas;
+  document.getElementById('bFull').onclick = full;
+  window.addEventListener('resize', fit);
+
+  /* predicción de la siguiente palabra (ilustrativa) */
+  const PRED = [['jueves', 38], ['próximo', 22], ['día', 17], ['15', 9], ['martes', 8]];
+  const pb = document.getElementById('predBars');
+  pb.innerHTML = PRED.map(([w, p]) => `<div class="brow" style="grid-template-columns:120px 1fr 56px"><button class="chip" data-w="${w}">${w}</button><div class="btrack"><div class="bfill" style="width:${p * 2}%"></div></div><span class="bval">${p} %</span></div>`).join('');
+  pb.addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) document.getElementById('predOut').textContent = b.dataset.w; });
+
+  /* calculadora de coste: tokens = palabras × 1,3 */
+  const TOK = 1.3;
+  const MOD = [['GPT-6 Luna', 0.10, 0.50], ['GPT-6.1 Terra', 1, 5], ['GPT-6.1 Sol', 2, 10], ['GPT-6 Astra', 10, 50]];
+  const TAR = [
+    {n: 'Acta de una reunión (JuntIA)', inW: 3800, outW: 1000, veces: 1, d: 'Notas de unas 3.000 palabras más instrucciones; acta de unas 1.000 palabras.'},
+    {n: 'Campaña de comunicación (DifundIA)', inW: 4600, outW: 2500, veces: 1, d: 'Documentos y boletín anterior (unas 4.600 palabras); 8 textos (unas 2.500 palabras).'},
+    {n: 'Informe de una encuesta de 60 personas (EncuestIA)', inW: 6000, outW: 1500, veces: 1, d: 'Respuestas abiertas y tablas (unas 6.000 palabras); temas y comentarios (unas 1.500 palabras).'},
+    {n: 'Mejorar un proyecto de subvención, 10 ciclos (SubvencIA)', inW: 19000, outW: 1500, veces: 20, d: 'Cada ciclo hace 2 llamadas con la convocatoria y el proyecto (unas 19.000 palabras) y devuelve unas 1.500 palabras.'}
+  ];
+  const ct = document.getElementById('cTarea'), cm = document.getElementById('cModelo');
+  ct.innerHTML = TAR.map((t, k) => `<option value="${k}">${t.n}</option>`).join('');
+  cm.innerHTML = MOD.map((m, k) => `<option value="${k}">${m[0]} (${String(m[1]).replace('.', ',')} $ / ${String(m[2]).replace('.', ',')} $)</option>`).join('');
+  const fmt = (v, d) => v.toFixed(d).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  function calc() {
+    const t = TAR[ct.value], m = MOD[cm.value];
+    const tin = t.inW * TOK * t.veces, tout = t.outW * TOK * t.veces;
+    const usd = tin / 1e6 * m[1] + tout / 1e6 * m[2];
+    document.getElementById('cRes').textContent = usd < 0.01 ? fmt(usd * 100, 2) + ' céntimos' : fmt(usd, usd < 1 ? 3 : 2) + ' $';
+    document.getElementById('cRes2').textContent = `≈ ${fmt(Math.round(tin), 0)} tokens de entrada y ${fmt(Math.round(tout), 0)} de salida`;
+    document.getElementById('cSupuesto').textContent = 'Supuesto: ' + t.d;
+    const veces = Math.floor(5 / usd);
+    document.getElementById('cCinco').innerHTML = veces >= 1
+      ? `Con <b>5 $</b> de saldo, esta tarea se puede hacer unas <b>${fmt(veces, 0)} ${veces === 1 ? 'vez' : 'veces'}</b>.`
+      : `Con <b>5 $</b> de saldo no llega: el tope de gasto pararía la tarea a medias. Con un modelo más económico cuesta mucho menos.`;
+  }
+  ct.onchange = cm.onchange = calc; calc();
+
+  fit();
+  go(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+})();
+</script>
+</body>
+</html>
