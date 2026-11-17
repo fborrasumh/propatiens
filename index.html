@@ -59,6 +59,7 @@ h2 { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; lette
 .card .chk b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 3px; }
 .card .foot { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding-top: 6px; }
 .btn { display: inline-flex; align-items: center; gap: 6px; font: 600 13px 'Inter', sans-serif; padding: 7px 14px; border-radius: 99px; text-decoration: none; background: var(--c); color: #fff; }
+.kit { margin-top: 16px; } .kit p { font-size: 14px; color: #555; margin-bottom: 12px; }
 .shared { margin-top: 16px; font-size: 14px; color: #555; background: var(--surface); border: .5px solid var(--border); border-radius: 12px; padding: 14px 18px; }
 
 /* SESSIONS */
@@ -131,6 +132,11 @@ footer a { text-decoration: none; }
     <p class="lead" data-i18n="appsLead"></p>
     <div class="grid" id="grid"></div>
     <p class="shared" data-i18n="shared"></p>
+    <div class="box kit">
+      <h3><i class="ti ti-file-zip"></i> <span data-i18n="kitH"></span></h3>
+      <p data-i18n="kitP"></p>
+      <a class="btn" style="--c:var(--accent)" href="materiales/kit_asociacion_ficticia_equilibrio.zip" download><i class="ti ti-download"></i> <span data-i18n="kitBtn"></span></a>
+    </div>
   </section>
 
   <section id="curso">
@@ -204,6 +210,9 @@ es:{
   slides:"Ver la presentación",
   checks:"Qué comprueba el código", open:"Abrir app", session:"Sesión",
   shared:"El perfil de la asociación (nombre, misión, públicos, tono, fuentes aprobadas y fechas clave) se rellena en cualquiera de las apps, se descarga en JSON y se sube en la siguiente: no hace falta escribirlo cuatro veces.",
+  kitH:"Kit de prácticas: una asociación ficticia",
+  kitP:"Para practicar sin usar datos de ninguna asociación real: perfil común (con logo y colores), notas, actas y boletines para JuntIA, el programa de un taller para DifundIA, unas bases, un borrador de proyecto y su memoria para SubvencIA, y una encuesta de 115 respuestas para EncuestIA. Incluye un LEEME con qué subir en cada app y la idea que hay que escribir.",
+  kitBtn:"Descargar el kit (.zip)",
   apps:{
     juntia:{ area:"Comunicación interna", what:"Convocatorias de junta y asamblea con orden del día; actas desde notas o audio con acuerdos, responsables y plazos; seguimiento de acuerdos; comunicados a socios y voluntariado; manual de acogida.", chk:"Cada acuerdo del acta lleva una cita literal de las notas; los acuerdos sin cita se marcan; las fechas y los plazos se calculan por código." },
     difundia:{ area:"Comunicación externa", what:"Plan y calendario de comunicación; un mensaje adaptado a redes, nota de prensa, web, boletín y WhatsApp; versiones por público en lenguaje claro; briefing para Canva.", chk:"Legibilidad calculada por código (índice Fernández-Huerta); afirmaciones de salud con cita de una fuente aprobada; enlaces ajenos, cifras nuevas y expresiones estigmatizantes marcados." },
@@ -268,6 +277,9 @@ ca:{
   slides:"Veure la presentació (en castellà)",
   checks:"Què comprova el codi", open:"Obrir app", session:"Sessió",
   shared:"El perfil de l'associació (nom, missió, públics, to, fonts aprovades i dates clau) s'omple en qualsevol de les apps, es descarrega en JSON i es puja a la següent: no cal escriure'l quatre vegades.",
+  kitH:"Kit de pràctiques: una associació fictícia",
+  kitP:"Per practicar sense fer servir dades de cap associació real: perfil comú (amb logo i colors), notes, actes i butlletins per a JuntIA, el programa d'un taller per a DifundIA, unes bases, un esborrany de projecte i la seua memòria per a SubvencIA, i una enquesta de 115 respostes per a EncuestIA. Inclou un LLEGIU-ME (en castellà) amb què cal pujar a cada app i la idea que cal escriure.",
+  kitBtn:"Descarrega el kit (.zip)",
   apps:{
     juntia:{ area:"Comunicació interna", what:"Convocatòries de junta i assemblea amb ordre del dia; actes a partir de notes o àudio amb acords, responsables i terminis; seguiment d'acords; comunicats a socis i voluntariat; manual d'acollida.", chk:"Cada acord de l'acta porta una cita literal de les notes; els acords sense cita es marquen; les dates i els terminis es calculen per codi." },
     difundia:{ area:"Comunicació externa", what:"Pla i calendari de comunicació; un missatge adaptat a xarxes, nota de premsa, web, butlletí i WhatsApp; versions per públic en llenguatge clar; briefing per a Canva.", chk:"Llegibilitat calculada per codi (índex Fernández-Huerta); afirmacions de salut amb cita d'una font aprovada; enllaços aliens, xifres noves i expressions estigmatitzants marcats." },
@@ -332,6 +344,9 @@ eu:{
   slides:"Ikusi aurkezpena (gaztelaniaz)",
   checks:"Kodeak zer egiaztatzen duen", open:"Ireki aplikazioa", session:"Saioa",
   shared:"Elkartearen profila (izena, misioa, publikoak, tonua, onartutako iturriak eta data garrantzitsuak) edozein aplikaziotan betetzen da, JSON gisa deskargatu eta hurrengoan igotzen da: ez da lau aldiz idatzi behar.",
+  kitH:"Praktiketarako kita: elkarte asmatu bat",
+  kitP:"Benetako elkarteen daturik erabili gabe praktikatzeko: profil komuna (logoa eta koloreekin), oharrak, aktak eta buletinak JuntIArako, tailer baten egitaraua DifundIArako, oinarri batzuk, proiektu-zirriborro bat eta haren memoria SubvencIArako, eta 115 erantzuneko inkesta bat EncuestIArako. Aplikazio bakoitzean zer igo eta zer idea idatzi azaltzen duen IRAKURRI fitxategi bat dakar (gaztelaniaz).",
+  kitBtn:"Deskargatu kita (.zip)",
   apps:{
     juntia:{ area:"Barne komunikazioa", what:"Zuzendaritza batzarren eta batzar orokorren deialdiak gai zerrendarekin; aktak oharretatik edo audiotik, erabaki, arduradun eta epeekin; erabakien jarraipena; bazkide eta boluntarioentzako oharrak; harrera eskuliburua.", chk:"Aktako erabaki bakoitzak oharretako aipu literal bat darama; aipurik gabeko erabakiak markatu egiten dira; datak eta epeak kodez kalkulatzen dira." },
     difundia:{ area:"Kanpo komunikazioa", what:"Komunikazio plana eta egutegia; mezu bat sare sozialetara, prentsa oharrera, webera, buletinera eta WhatsAppera egokitua; publiko bakoitzerako bertsioak hizkera argian; Canvarako briefinga.", chk:"Irakurgarritasuna kodez kalkulatua (Fernández-Huerta indizea); osasun baieztapenak onartutako iturri baten aipuarekin; kanpoko estekak, zifra berriak eta adierazpen estigmatizatzaileak markatuta." },
@@ -396,6 +411,9 @@ gl:{
   slides:"Ver a presentación (en castelán)",
   checks:"Que comproba o código", open:"Abrir app", session:"Sesión",
   shared:"O perfil da asociación (nome, misión, públicos, ton, fontes aprobadas e datas clave) énchese en calquera das apps, descárgase en JSON e súbese na seguinte: non fai falta escribilo catro veces.",
+  kitH:"Kit de prácticas: unha asociación ficticia",
+  kitP:"Para practicar sen usar datos de ningunha asociación real: perfil común (con logo e cores), notas, actas e boletíns para JuntIA, o programa dun obradoiro para DifundIA, unhas bases, un borrador de proxecto e a súa memoria para SubvencIA, e unha enquisa de 115 respostas para EncuestIA. Inclúe un LEME (en castelán) co que hai que subir en cada app e a idea que hai que escribir.",
+  kitBtn:"Descargar o kit (.zip)",
   apps:{
     juntia:{ area:"Comunicación interna", what:"Convocatorias de xunta e asemblea con orde do día; actas a partir de notas ou audio con acordos, responsables e prazos; seguimento de acordos; comunicados a socios e voluntariado; manual de acollida.", chk:"Cada acordo da acta leva unha cita literal das notas; os acordos sen cita márcanse; as datas e os prazos calcúlanse por código." },
     difundia:{ area:"Comunicación externa", what:"Plan e calendario de comunicación; unha mensaxe adaptada a redes, nota de prensa, web, boletín e WhatsApp; versións por público en linguaxe clara; briefing para Canva.", chk:"Lexibilidade calculada por código (índice Fernández-Huerta); afirmacións de saúde con cita dunha fonte aprobada; ligazóns alleas, cifras novas e expresións estigmatizantes marcadas." },
@@ -460,6 +478,9 @@ en:{
   slides:"View the slides (in Spanish)",
   checks:"What the code checks", open:"Open app", session:"Session",
   shared:"The association profile (name, mission, audiences, tone, approved sources and key dates) is filled in in any of the apps, downloaded as JSON and uploaded in the next one: no need to write it four times.",
+  kitH:"Practice kit: a fictitious association",
+  kitP:"To practise without using any real association's data: shared profile (with logo and colours), notes, minutes and newsletters for JuntIA, a workshop programme for DifundIA, call guidelines, a draft project and annual report for SubvencIA, and a 115-response survey for EncuestIA. Includes a README (in Spanish) saying what to upload in each app and which idea to type.",
+  kitBtn:"Download the kit (.zip)",
   apps:{
     juntia:{ area:"Internal communication", what:"Board and general meeting notices with agenda; minutes from notes or audio with decisions, owners and deadlines; decision tracking; announcements to members and volunteers; volunteer welcome handbook.", chk:"Every decision in the minutes carries a verbatim quote from the notes; decisions without a quote are flagged; dates and deadlines are computed by code." },
     difundia:{ area:"External communication", what:"Communication plan and calendar; one message adapted to social media, press release, website, newsletter and WhatsApp; plain-language versions per audience; Canva design brief.", chk:"Readability computed by code (Fernández-Huerta index); health claims cited to an approved source; external links, new figures and stigmatising wording flagged." },
@@ -524,6 +545,9 @@ pt:{
   slides:"Ver a apresentação (em espanhol)",
   checks:"O que o código verifica", open:"Abrir app", session:"Sessão",
   shared:"O perfil da associação (nome, missão, públicos, tom, fontes aprovadas e datas-chave) preenche-se em qualquer uma das apps, transfere-se em JSON e carrega-se na seguinte: não é preciso escrevê-lo quatro vezes.",
+  kitH:"Kit de prática: uma associação fictícia",
+  kitP:"Para praticar sem usar dados de nenhuma associação real: perfil comum (com logótipo e cores), notas, atas e boletins para o JuntIA, o programa de uma oficina para o DifundIA, um regulamento, um rascunho de projeto e o relatório de atividades para o SubvencIA, e um inquérito com 115 respostas para o EncuestIA. Inclui um LEIA-ME (em espanhol) com o que carregar em cada app e a ideia a escrever.",
+  kitBtn:"Transferir o kit (.zip)",
   apps:{
     juntia:{ area:"Comunicação interna", what:"Convocatórias de direção e assembleia com ordem de trabalhos; atas a partir de notas ou áudio com deliberações, responsáveis e prazos; acompanhamento das deliberações; comunicados a sócios e voluntários; manual de acolhimento.", chk:"Cada deliberação da ata leva uma citação literal das notas; as deliberações sem citação são assinaladas; as datas e os prazos são calculados por código." },
     difundia:{ area:"Comunicação externa", what:"Plano e calendário de comunicação; uma mensagem adaptada a redes sociais, comunicado de imprensa, site, boletim e WhatsApp; versões por público em linguagem clara; briefing para Canva.", chk:"Legibilidade calculada por código (índice Fernández-Huerta); afirmações de saúde com citação de uma fonte aprovada; ligações externas, números novos e expressões estigmatizantes assinalados." },
