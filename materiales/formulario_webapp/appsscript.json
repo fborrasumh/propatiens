@@ -1,0 +1,7 @@
+{
+  "timeZone": "Europe/Madrid",
+  "runtimeVersion": "V8",
+  "exceptionLogging": "STACKDRIVER",
+  "oauthScopes": ["https://www.googleapis.com/auth/forms"],
+  "webapp": {"executeAs": "USER_ACCESSING", "access": "ANYONE"}
+}
